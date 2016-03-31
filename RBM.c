@@ -66,6 +66,59 @@ int** FCFS(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5]){
     return reqStatus;
 }
 
+/* function input
+variables: char input for storing the line user entered
+           int firstword to save the place of first word
+		   
+*/
+void input()
+{
+char input[30];/* for storing everyting user input*/
+int i;/* to store the length of the first word(request)*/
+const char space[2]=" ";
+const char *a="a";
+const char *p="p";
+char *firstword;
+char first[2];
+printf("please enter a booking:\n");
+scanf("%s",&input);
+firstword = strtok(input,space);
+sprintf(first, "%c",firstword[0]);
+if (strcmp(first,a)==0){
+		printf("a request of booking is recieved\n");
+		switch (firstword[3]){
+		case 'M':
+		case 'm':
+			printf("the request is addMeeting\n");
+			break;
+		case 'p':
+		case 'P':
+			printf("the request is addPresentation\n");
+			break;
+		case 'C':
+		case 'c':
+			printf("the request is addConference\n");
+			break;
+		case 'D':
+		case 'd':
+			printf("the request is addDevice\n");
+			break;
+		case 'B':
+		case 'b':
+			printf("the request is addBatch\n");
+			break;
+		}
+	}
+	else if (strcmp(first,p)==0){
+		/*call output and calaulate*/
+		printf("print out booking\n");
+	}	
+	else {
+		/*user input error*/
+		printf("unknown request");
+		}
+}
+
 
 
 int main(){
