@@ -69,8 +69,11 @@ int** FCFS(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5]){
 
 
 int main(){
+	// 1. input module - input lines in cmd and lines in .dat files
 	int reqNum[N],st[N],ed[N],fNum[N][5];
 	int i;
+	
+	// 2. scheduling module - comment your updated interface if there is any modification
 	///*for testing
 	//#1
 	reqNum[0]=1;
@@ -91,6 +94,9 @@ int main(){
 	fNum[5][0]=2;fNum[5][1]=3;fNum[5][2]=4;
 
 	//*/
+	
+	// 3. output module - print out the latest schedule and write into .dat files
+	// parent and child processes
 
 	int **reqStatus=FCFS(reqNum,3,st,ed,fNum);
 
