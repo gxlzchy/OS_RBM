@@ -69,22 +69,36 @@ int** FCFS(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5]){
 /* function input
 variables: char input for storing the line user entered
            int firstword to save the place of first word
+		   char *fac for saving the facility user entered
+		   char *dat for the date 
+		   char* time for the time
+		   char *dur for the duration
+		   char * caller for the caller
+	return 0 if the input is reconized 
+	return 1 for unknow request
 		   
 */
-void input()
+int input()
 {
 char input[30];/* for storing everyting user input*/
 int i;/* to store the length of the first word(request)*/
 const char space[2]=" ";
 const char *a="a";
 const char *p="p";
+const char *e="e";
 char *firstword;
 char first[2];
 printf("please enter a booking:\n");
 scanf("%s",&input);
 firstword = strtok(input,space);
 sprintf(first, "%c",firstword[0]);
-if (strcmp(first,a)==0){
+if (strcmp(first,a)==0){/* for the case add booking command is entered*/
+	char *fac,*dat,*time,*dur,*caller;
+	fac = strtok(NULL,space);
+	dat = strtok(NULL,space);
+	time = strtok(NULL,space);
+	dur = strtok(NULL,space);
+	caller = strtok(NULL,space);
 		printf("a request of booking is recieved\n");
 		switch (firstword[3]){
 		case 'M':
@@ -116,7 +130,9 @@ if (strcmp(first,a)==0){
 	else {
 		/*user input error*/
 		printf("unknown request");
+		return 1;
 		}
+	return 0;
 }
 
 
