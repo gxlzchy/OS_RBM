@@ -66,7 +66,7 @@ int** FCFS(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5]){
     return reqStatus;
 }
 
-/* function input
+/** function input
 variables: char input for storing the line user entered
            int firstword to save the place of first word
 		   char *fac for saving the facility user entered
@@ -74,31 +74,37 @@ variables: char input for storing the line user entered
 		   char* time for the time
 		   char *dur for the duration
 		   char * caller for the caller
-	return 0 if the input is reconized 
-	return 1 for unknow request
+	@the function reads a line of input and detect which request has been entered
+	@This function return an array for saving input from user 
+	place of array:0:requestNumber,1: starttime,2:endtime,3:
+	
 		   
 */
-int input()
+int* input()
 {
 char input[30];/* for storing everyting user input*/
-int i;/* to store the length of the first word(request)*/
+int i,n;/* to store the length of the first word(request)*/
 const char space[2]=" ";
 const char *a="a";
 const char *p="p";
 const char *e="e";
 char *firstword;
-char first[2];
+char first[2], third[2];
 printf("please enter a booking:\n");
 scanf("%s",&input);
 firstword = strtok(input,space);
 sprintf(first, "%c",firstword[0]);
+sprintf(third,"%c",firstword[3]);
 if (strcmp(first,a)==0){/* for the case add booking command is entered*/
+	if (strcmp(third,b)!0){
 	char *fac,*dat,*time,*dur,*caller;
 	fac = strtok(NULL,space);
 	dat = strtok(NULL,space);
 	time = strtok(NULL,space);
 	dur = strtok(NULL,space);
 	caller = strtok(NULL,space);
+	n=5;
+	}
 		printf("a request of booking is recieved\n");
 		switch (firstword[3]){
 		case 'M':
@@ -107,10 +113,16 @@ if (strcmp(first,a)==0){/* for the case add booking command is entered*/
 			break;
 		case 'p':
 		case 'P':
+		    char *dev1 = strtok(NULL,space);
+			char *dev2 = strtok(NULL,space);
+			n=7
 			printf("the request is addPresentation\n");
 			break;
 		case 'C':
 		case 'c':
+		    char *dev1 = strtok(NULL,space);
+			char *dev2 = strtok(NULL,space);
+			n=7
 			printf("the request is addConference\n");
 			break;
 		case 'D':
@@ -130,7 +142,6 @@ if (strcmp(first,a)==0){/* for the case add booking command is entered*/
 	else {
 		/*user input error*/
 		printf("unknown request");
-		return 1;
 		}
 	return 0;
 }
