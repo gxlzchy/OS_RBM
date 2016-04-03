@@ -67,6 +67,7 @@ int** FCFS(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5]){
 }
 
 /** function input
+@param: int reqno:to let the function know how many request is recieved now
 variables: char input for storing the line user entered
            int firstword to save the place of first word
 		   char *fac for saving the facility user entered
@@ -80,7 +81,7 @@ variables: char input for storing the line user entered
 	
 		   
 */
-int* input()
+int* input(int reqno)
 {
 char input[30];/* for storing everyting user input*/
 int i,n;/* to store the length of the first word(request)*/
@@ -91,6 +92,7 @@ const char *e="e";
 const char *b="b";
 char *firstword;
 char first[2], third[2];
+int *result;
 printf("please enter a booking:\n");
 scanf("%s",&input);
 firstword = strtok(input,space);
@@ -98,50 +100,62 @@ sprintf(first, "%c",firstword[0]);
 sprintf(third,"%c",firstword[3]);
 if (strcmp(first,a)==0){/* for the case add booking command is entered*/
 	if (strcmp(third,b)!=0){
-	char *fac,*dat,*time,*dur,*caller,*dev1,*dev2;
-	fac = strtok(NULL,space);
-	dat = strtok(NULL,space);
-	time = strtok(NULL,space);
-	dur = strtok(NULL,space);
-	caller = strtok(NULL,space);
-	n=5;
+		char *fac,*dat,*time,*dur,*caller,*dev,*dev1;
+		fac = strtok(NULL,space);
+		dat = strtok(NULL,space);
+		time = strtok(NULL,space);
+		dur = strtok(NULL,space);
+		caller = strtok(NULL,space);
+		n=5;
+		result = malloc(5*sizeof(int));
 	}
+	request[0]=reqno;
+	
 	printf("a request of booking is recieved\n");
 	switch (firstword[3]){
-	case 'M':
-	case 'm':
-		printf("the request is addMeeting\n");
-		break;
-	case 'p':
-	case 'P':
-		n=7;
-		printf("the request is addPresentation\n");
-		break;
-	case 'C':
-	case 'c':
-		n=7;
-		printf("the request is addConference\n");
-		break;
-	case 'D':
-	case 'd':
-		printf("the request is addDevice\n");
-		break;
-	case 'B':
-	case 'b':
-		printf("the request is addBatch\n");
-		break;
-	}
-}
-else if (strcmp(first,p)==0){
-	/*call output and calaulate*/
-	printf("print out booking\n");
-}	
-else {
-	/*user input error*/
-	printf("unknown request");
-	}
+		case 'M':
+		case 'm':
+			result[3]=2;
+			switch (fac[5]){
+				case 'A':
+					result[4]=1;
+				case 'B':
+					result[4]=2;
+			}
+			
+			printf("the request is addMeeting\n");
+			break;
+		case 'p':
+		case 'P':
+			n=7;
+			printf("the request is addPresentation\n");
+			break;
+		case 'C':
+		case 'c':
+			n=7;
+			printf("the request is addConference\n");
+			break;
+		case 'D':
+		case 'd':
+			printf("the request is addDevice\n");
+			break;
+		case 'B':
+		case 'b':
+			printf("the request is addBatch\n");
+			break;
+		}
 	
-return 0;
+	}
+	else if (strcmp(first,p)==0){
+		/*call output and calaulate*/
+		printf("print out booking\n");
+	}	
+	else {
+		/*user input error*/
+		printf("unknown request");
+		}
+	
+	return result;
 }
 
 
@@ -149,7 +163,7 @@ return 0;
 int main(){
 	// 1. input module - input lines in cmd and lines in .dat files
 	int reqNum[N],st[N],ed[N],fNum[N][5];
-	int i;
+	int i,reqno;
 	
 	// 2. scheduling module - comment your updated interface if there is any modification
 	///*for testing
