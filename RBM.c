@@ -88,6 +88,7 @@ const char space[2]=" ";
 const char *a="a";
 const char *p="p";
 const char *e="e";
+const char *b="b";
 char *firstword;
 char first[2], third[2];
 printf("please enter a booking:\n");
@@ -96,8 +97,8 @@ firstword = strtok(input,space);
 sprintf(first, "%c",firstword[0]);
 sprintf(third,"%c",firstword[3]);
 if (strcmp(first,a)==0){/* for the case add booking command is entered*/
-	if (strcmp(third,b)!0){
-	char *fac,*dat,*time,*dur,*caller;
+	if (strcmp(third,b)!=0){
+	char *fac,*dat,*time,*dur,*caller,*dev1,*dev2;
 	fac = strtok(NULL,space);
 	dat = strtok(NULL,space);
 	time = strtok(NULL,space);
@@ -105,45 +106,42 @@ if (strcmp(first,a)==0){/* for the case add booking command is entered*/
 	caller = strtok(NULL,space);
 	n=5;
 	}
-		printf("a request of booking is recieved\n");
-		switch (firstword[3]){
-		case 'M':
-		case 'm':
-			printf("the request is addMeeting\n");
-			break;
-		case 'p':
-		case 'P':
-		    char *dev1 = strtok(NULL,space);
-			char *dev2 = strtok(NULL,space);
-			n=7
-			printf("the request is addPresentation\n");
-			break;
-		case 'C':
-		case 'c':
-		    char *dev1 = strtok(NULL,space);
-			char *dev2 = strtok(NULL,space);
-			n=7
-			printf("the request is addConference\n");
-			break;
-		case 'D':
-		case 'd':
-			printf("the request is addDevice\n");
-			break;
-		case 'B':
-		case 'b':
-			printf("the request is addBatch\n");
-			break;
-		}
+	printf("a request of booking is recieved\n");
+	switch (firstword[3]){
+	case 'M':
+	case 'm':
+		printf("the request is addMeeting\n");
+		break;
+	case 'p':
+	case 'P':
+		n=7;
+		printf("the request is addPresentation\n");
+		break;
+	case 'C':
+	case 'c':
+		n=7;
+		printf("the request is addConference\n");
+		break;
+	case 'D':
+	case 'd':
+		printf("the request is addDevice\n");
+		break;
+	case 'B':
+	case 'b':
+		printf("the request is addBatch\n");
+		break;
 	}
-	else if (strcmp(first,p)==0){
-		/*call output and calaulate*/
-		printf("print out booking\n");
-	}	
-	else {
-		/*user input error*/
-		printf("unknown request");
-		}
-	return 0;
+}
+else if (strcmp(first,p)==0){
+	/*call output and calaulate*/
+	printf("print out booking\n");
+}	
+else {
+	/*user input error*/
+	printf("unknown request");
+	}
+	
+return 0;
 }
 
 
