@@ -151,79 +151,99 @@ variables: char input for storing the line user entered
 */
 int* input(int reqno)
 {
-char input[30];/* for storing everyting user input*/
+char input[50];/* for storing everyting user input*/
+char **split();
 int i,n;/* to store the length of the first word(request)*/
 const char space[2]=" ";
 const char *a="a";
 const char *p="p";
 const char *e="e";
 const char *b="b";
-char *firstword;
-char first[2], third[2];
-int *result;
+char **splited;
+char *third;
+int *result=malloc(5*sizeof(int));
 printf("please enter a booking:\n");
-scanf("%s",&input);
-firstword = strtok(input,space);
-sprintf(first, "%c",firstword[0]);
-sprintf(third,"%c",firstword[3]);
-if (strcmp(first,a)==0){/* for the case add booking command is entered*/
-	if (strcmp(third,b)!=0){
-		char *fac,*dat,*time,*dur,*caller,*dev,*dev1;
-		fac = strtok(NULL,space);
-		dat = strtok(NULL,space);
-		time = strtok(NULL,space);
-		dur = strtok(NULL,space);
-		caller = strtok(NULL,space);
-		n=5;
-		result = malloc(5*sizeof(int));
-	}
-	request[0]=reqno;
+fgets(input,50,stdin);
+splited = split(input);
+switch (input[0])
+{/* for the case add booking command is entered*/
+    case 'a':
+	    result[0]=reqno;
+	    printf("a request of booking is recieved\n");
+	    switch (splited[0][3]){
+		    case 'M':
+		    case 'm':
+			    result[3]=2;
+			    printf("the request is addMeeting\n");
+    			break;
+		    case 'p':
+    		case 'P':
+			    n=7;
+			    result = realloc(result, 7 * sizeof(int));
+    			printf("the request is addPresentation\n");
+    			break;
+		    case 'C':
+		    case 'c':
+			    n=7;
+			    result = realloc(result, 7 * sizeof(int));
+			    printf("the request is addConference\n");
+    			break;
+		    case 'D':
+		    case 'd':
+			    printf("the request is addDevice\n");
+    			break;
+		    case 'B':
+		    case 'b':
+			    printf("the request is addBatch\n");
+			    break;
+		    }
+	    break;
 	
-	printf("a request of booking is recieved\n");
-	switch (firstword[3]){
-		case 'M':
-		case 'm':
-			result[3]=2;
-			switch (fac[5]){
-				case 'A':
-					result[4]=1;
-				case 'B':
-					result[4]=2;
-			}
-			
-			printf("the request is addMeeting\n");
-			break;
-		case 'p':
-		case 'P':
-			n=7;
-			printf("the request is addPresentation\n");
-			break;
-		case 'C':
-		case 'c':
-			n=7;
-			printf("the request is addConference\n");
-			break;
-		case 'D':
-		case 'd':
-			printf("the request is addDevice\n");
-			break;
-		case 'B':
-		case 'b':
-			printf("the request is addBatch\n");
-			break;
-		}
-	
-	}
-	else if (strcmp(first,p)==0){
+	case 'p':
 		/*call output and calaulate*/
 		printf("print out booking\n");
-	}	
-	else {
+		break;
+    default:
 		/*user input error*/
 		printf("unknown request");
-		}
+	}
 	
 	return result;
+}
+
+/**@param:char str[]: the string to be splited.
+
+	@the funtion take a string and return a 2 dimentional array which contains the words in the input string splited into the array.
+	
+
+*/
+char **split(char str[]){
+	
+char ** res  = NULL;
+char *  p    = strtok (str, " ");
+int n_spaces = 0, i;
+
+
+/* split string and append tokens to 'res' */
+
+while (p) {
+  res = realloc (res, sizeof (char*) * ++n_spaces);
+
+  if (res == NULL)
+    exit (-1); /* memory allocation failed */
+
+  res[n_spaces-1] = p;
+
+  p = strtok (NULL, " ");
+}
+
+/* realloc one extra element for the last NULL */
+
+res = realloc (res, sizeof (char*) * (n_spaces+1));
+res[n_spaces] = 0;
+
+
+return res;
 }
 
 
