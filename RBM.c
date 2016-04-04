@@ -144,8 +144,9 @@ variables: char input for storing the line user entered
 		   char *dur for the duration
 		   char * caller for the caller
 	@the function reads a line of input and detect which request has been entered
-	@This function return an array for saving input from user 
-	place of array:0:requestNumber,1: starttime,2:endtime,3:
+	@This function return an array for saving input from user ,if end program command is received, it will return
+	an array size one and value is -1, and if a print booking request is received, an array of size 1 and value 0 is returned.
+	place of array:0:requestNumber,1: starttime,2:endtime,3:total no. of device in this booking,4:dev1 number,5:dev2 number
 	
 		   
 */
@@ -161,7 +162,8 @@ const char *e="e";
 const char *b="b";
 char **splited;
 char *third;
-int *result=malloc(5*sizeof(int));
+int *result=malloc(sizeof(int));
+result[0]=-1;
 printf("please enter a booking:\n");
 fgets(input,50,stdin);
 splited = split(input);
@@ -173,24 +175,27 @@ switch (input[0])
 	    switch (splited[0][3]){
 		    case 'M':
 		    case 'm':
-			    result[3]=2;
+			    result[3]=1;
 			    printf("the request is addMeeting\n");
     			break;
 		    case 'p':
     		case 'P':
 			    n=7;
 			    result = realloc(result, 7 * sizeof(int));
+				result[3]=3;
     			printf("the request is addPresentation\n");
     			break;
 		    case 'C':
 		    case 'c':
 			    n=7;
 			    result = realloc(result, 7 * sizeof(int));
+				result[3]=3;
 			    printf("the request is addConference\n");
     			break;
 		    case 'D':
 		    case 'd':
 			    printf("the request is addDevice\n");
+				result[3]=1;
     			break;
 		    case 'B':
 		    case 'b':
@@ -202,7 +207,11 @@ switch (input[0])
 	case 'p':
 		/*call output and calaulate*/
 		printf("print out booking\n");
-		break;
+		result[0]=0;
+		return result;
+	case 'e':
+		printf("end of program, thanks for using!");
+		return result;
     default:
 		/*user input error*/
 		printf("unknown request");
