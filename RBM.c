@@ -136,8 +136,9 @@ int** greedy(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5]){
 
 /** function input
 @param: int reqno:to let the function know how many request is recieved now
-variables: char input for storing the line user entered
-           int firstword to save the place of first word
+		char input for storing the line user entered
+
+variables: int firstword to save the place of first word
 		   char *fac for saving the facility user entered
 		   char *dat for the date 
 		   char* time for the time
@@ -150,10 +151,10 @@ variables: char input for storing the line user entered
 	
 		   
 */
-int* input(int reqno)
+int* input(int reqno, char input[], int stdat[])
 {
-char input[50];/* for storing everyting user input*/
 char **split();
+int datdif();
 int i,n;/* to store the length of the first word(request)*/
 const char space[2]=" ";
 const char *a="a";
@@ -162,11 +163,13 @@ const char *e="e";
 const char *b="b";
 char **splited;
 char *third;
+char **dat, **ti, **du;
+int date[3], tim, ddif,ofl=0, dur;
 int *result=malloc(sizeof(int));
 result[0]=-1;
-printf("please enter a booking:\n");
-fgets(input,50,stdin);
-splited = split(input);
+
+splited = split(input," ");
+
 switch (input[0])
 {/* for the case add booking command is entered*/
     case 'a':
@@ -176,6 +179,14 @@ switch (input[0])
 		    case 'M':
 		    case 'm':
 			    result[3]=1;
+				switch(splited[1][6]){
+					case 'A':
+						result[4] = 1;
+						break;
+					case 'B':
+						result[4] = 2;
+						break;
+				}
 			    printf("the request is addMeeting\n");
     			break;
 		    case 'p':
@@ -183,6 +194,14 @@ switch (input[0])
 			    n=7;
 			    result = realloc(result, 7 * sizeof(int));
 				result[3]=3;
+				switch(splited[1][6]){
+					case 'A':
+						result[4] = 1;
+						break;
+					case 'B':
+						result[4] = 2;
+						break;
+				}
     			printf("the request is addPresentation\n");
     			break;
 		    case 'C':
@@ -190,6 +209,14 @@ switch (input[0])
 			    n=7;
 			    result = realloc(result, 7 * sizeof(int));
 				result[3]=3;
+				switch(splited[1][6]){
+					case 'A':
+						result[4] = 1;
+						break;
+					case 'B':
+						result[4] = 2;
+						break;
+				}
 			    printf("the request is addConference\n");
     			break;
 		    case 'D':
@@ -199,9 +226,11 @@ switch (input[0])
     			break;
 		    case 'B':
 		    case 'b':
+				ofl=1;
 			    printf("the request is addBatch\n");
 			    break;
 		    }
+		
 	    break;
 	
 	case 'p':
@@ -216,7 +245,24 @@ switch (input[0])
 		/*user input error*/
 		printf("unknown request");
 	}
+if(ofl == 0){
+	/* find out the start time and end time and save them in array result index 1 and 2*/
+	dat = split(splited[2],"-");
+	for (i=0;i<3;i++)
+	date[i] = atoi(dat[i]);
+	ti = split(splited[3],":");
+	tim = atoi(ti[0]) - 9;
+	ddif = datdif(stdat, date);
+	result[1] = (ddif*10) + tim;
+	du = split(splited[4],".");
+	dur = atoi(du[0]);
+	result[2] = result[1] + dur -1;
+	//
 	
+
+
+}
+
 	return result;
 }
 
@@ -226,10 +272,10 @@ switch (input[0])
 	
 
 */
-char **split(char str[]){
+char **split(char str[],const char s[]){
 	
 char ** res  = NULL;
-char *  p    = strtok (str, " ");
+char *  p    = strtok (str, s);
 int n_spaces = 0, i;
 
 
@@ -243,7 +289,7 @@ while (p) {
 
   res[n_spaces-1] = p;
 
-  p = strtok (NULL, " ");
+  p = strtok (NULL, s);
 }
 
 /* realloc one extra element for the last NULL */
@@ -255,12 +301,75 @@ res[n_spaces] = 0;
 return res;
 }
 
+/**@param: int stdat[]: starting date for the counting
+           int dat[] : the end date of the counting
+	@ this function calculate the days difference of from start date to the end day and return it
+	
+*/
+
+int datdif(int stdat[], int dat[]){
+	int diff;
+	int day = dat[2],year = dat[0] ,month = dat[1];
+	int stday = stdat[2],styear = stdat[0] ,stmonth = stdat[1];
+	if (month > stmonth){
+		if ((stmonth == 4) || (stmonth == 6) || (stmonth == 9) || (stmonth == 11)){
+			day += 30;
+		}
+		else if (stmonth == 2){
+			if (styear%4 == 0){
+				if (styear%100!=0){
+					if(styear%400 == 0){
+						day+=29;
+					}
+					else{
+						day+=28;
+					}
+				}
+				else{
+					day+=29;
+				}
+			}
+			else{
+				day+=28;
+			}
+		}
+		else{
+			day+=31;
+		}
+	}
+	diff = day - stday;
+	return diff;
+}
+
 
 
 int main(){
 	// 1. input module - input lines in cmd and lines in .dat files
 	int reqNum[N],st[N],ed[N],fNum[N][5];
-	int i,reqno;
+	int i,reqno = 1,commandno;
+	int stdat[3] , *request;           // stdat an array saving the starting time of the whole booking period(2 weeks)
+	int* input();   	// initialize the function input and split
+	char **split();    
+	char all[N][50], **str;   //an array for saving all command for convenience for output
+	while(request[0]>0){
+		printf("please enter booking/request:\n");
+		fgets(input,50,stdin);
+		strcpy(all[commandno++],input);
+		
+		/* set the start date for the system */
+		if (reqno == 1){       //if this is the first command, take this book's date as the start time of the whole booking period
+			str = split(input," ");
+			str = split(str[2],"-");
+			for(i=0;i<3;i++)
+			stdat[i] = atoi(str[i]);
+		}
+		/*   */
+		
+		
+		request = input(input ,reqno++, stdat);
+
+	}
+	
 	
 	// 2. scheduling module - comment your updated interface if there is any modification
 
