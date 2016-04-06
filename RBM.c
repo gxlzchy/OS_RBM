@@ -147,7 +147,12 @@ variables: int firstword to save the place of first word
 	@the function reads a line of input and detect which request has been entered
 	@This function return an array for saving input from user ,if end program command is received, it will return
 	an array size one and value is -1, and if a print booking request is received, an array of size 1 and value 0 is returned.
-	place of array:0:requestNumber,1: starttime,2:endtime,3:total no. of device in this booking,4:dev1 number,5:dev2 number
+	place of array:0:requestNumber,
+	1: starttime,
+	2:endtime,
+	3:total no. of device in this booking,
+	4:dev1 number,
+	5:dev2 number
 	
 		   
 */
@@ -155,7 +160,7 @@ int* input(int reqno, char input[], int stdat[])
 {
 char **split();
 int datdif();
-int i,n;/* to store the length of the first word(request)*/
+int i,n=5;/* i to store the length of the first word(request)*/
 const char space[2]=" ";
 const char *a="a";
 const char *p="p";
@@ -167,8 +172,20 @@ char **dat, **ti, **du;
 int date[3], tim, ddif,ofl=0, dur;
 int *result=malloc(sizeof(int));
 result[0]=-1;
+const char ckdev[8][15]={ "webcam_720p","webcam_1080p","monitor_50","monitor_75","projector_fhd","projector_xga","screen_100","screen_150" };
 
-splited = split(input," ");
+
+splited = split(input," ");  
+/*split the input by space, return as a 2D array, 
+0:request 
+1:room (-aaa) 
+2:date (yyy-mm-dd)
+3:time (hh:mm)
+4:duration(n.n)
+5:caller (bbb)
+6:first device(ccc)
+7:second device(ddd)
+*/
 
 switch (input[0])
 {/* for the case add booking command is entered*/
@@ -178,6 +195,7 @@ switch (input[0])
 	    switch (splited[0][3]){
 		    case 'M':
 		    case 'm':
+				result = realloc(result, 5 * sizeof(int));
 			    result[3]=1;
 				switch(splited[1][6]){
 					case 'A':
@@ -187,10 +205,14 @@ switch (input[0])
 						result[4] = 2;
 						break;
 				}
+				
 			    printf("the request is addMeeting\n");
     			break;
+				
 		    case 'p':
     		case 'P':
+			case 'c':
+			case 'C':
 			    n=7;
 			    result = realloc(result, 7 * sizeof(int));
 				result[3]=3;
@@ -202,28 +224,39 @@ switch (input[0])
 						result[4] = 2;
 						break;
 				}
-    			printf("the request is addPresentation\n");
-    			break;
-		    case 'C':
-		    case 'c':
-			    n=7;
-			    result = realloc(result, 7 * sizeof(int));
-				result[3]=3;
-				switch(splited[1][6]){
-					case 'A':
-						result[4] = 1;
-						break;
-					case 'B':
-						result[4] = 2;
-						break;
-				}
-			    printf("the request is addConference\n");
+				for(i=0;i<8;i++){
+		            ret = strstr(splited[6],ckdev[i]);
+		            if (ret){
+		                result[5] = i+2;
+		                break;
+		            }
+					
+		        }
+				for(i=0;i<8;i++){
+		            ret = strstr(splited[7],ckdev[i]);
+		            if (ret){
+		                result[6] = i+2;
+		                break;
+		            }
+					
+		        }
+				
+
     			break;
 		    case 'D':
 		    case 'd':
+				result = realloc(result, 5 * sizeof(int));
+				for(i=0;i<8;i++){
+		            ret = strstr(splited[1],ckdev[i]);
+		            if (ret){
+		                result[4] = i+2;
+		                break;
+		            }
+		        }
 			    printf("the request is addDevice\n");
 				result[3]=1;
     			break;
+				
 		    case 'B':
 		    case 'b':
 				ofl=1;
@@ -239,7 +272,6 @@ switch (input[0])
 		result[0]=0;
 		return result;
 	case 'e':
-		printf("end of program, thanks for using!");
 		return result;
     default:
 		/*user input error*/
@@ -311,7 +343,7 @@ int datdif(int stdat[], int dat[]){
 	int diff;
 	int day = dat[2],year = dat[0] ,month = dat[1];
 	int stday = stdat[2],styear = stdat[0] ,stmonth = stdat[1];
-	if (month > stmonth){
+	if (month > stmonth){  /*if the period is across two months*/
 		if ((stmonth == 4) || (stmonth == 6) || (stmonth == 9) || (stmonth == 11)){
 			day += 30;
 		}
@@ -337,6 +369,8 @@ int datdif(int stdat[], int dat[]){
 			day+=31;
 		}
 	}
+	
+	
 	diff = day - stday;
 	return diff;
 }
@@ -350,10 +384,10 @@ int main(){
 	int stdat[3] , *request;           // stdat an array saving the starting time of the whole booking period(2 weeks)
 	int* input();   	// initialize the function input and split
 	char **split();    
-	char all[N][50], **str;   //an array for saving all command for convenience for output
+	char all[N][80], **str;   //an array for saving all command for convenience for output
 	while(request[0]>0){
 		printf("please enter booking/request:\n");
-		fgets(input,50,stdin);
+		fgets(input,80,stdin);
 		strcpy(all[commandno++],input);
 		
 		/* set the start date for the system */
@@ -366,7 +400,22 @@ int main(){
 		/*   */
 		
 		
-		request = input(input ,reqno++, stdat);
+		request = input(input ,reqno, stdat);
+		if (request[0]>0){
+			reqNum[reqno] = request[0];
+			st[reqno] = request[1];
+			ed[reqno] = request[2];
+			fNum[reqno][0] = request[3];
+			fNum[reqno][1] = request[4];
+			if (result[0] == 3){
+				fNum[reqno][2] = request[5];
+				fNum[reqno][3] = request[6];
+			}
+		}
+		if (request[0] == -1){
+			printf("end of program, thanks for using!");
+			break;
+		}
 
 	}
 	
