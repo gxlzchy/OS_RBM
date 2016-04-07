@@ -206,7 +206,6 @@ switch (input[0])
 						break;
 				}
 				
-			    printf("the request is addMeeting\n");
     			break;
 				
 		    case 'p':
@@ -253,13 +252,25 @@ switch (input[0])
 		                break;
 		            }
 		        }
-			    printf("the request is addDevice\n");
 				result[3]=1;
     			break;
 				
 		    case 'B':
 		    case 'b':
 				ofl=1;
+				FILE *fp;
+				char **flname;
+				char *line = NULL;
+				size_t len = 0;
+				ssize_t read;
+				
+				flname = split(splited[1],"-");
+				fp = fopen(flname[0],"r");
+				if (fp == NULL)
+					exit(EXIT_FAILURE);
+				while ((read = getline(&line, &len,fp)) != -1){
+					result = input(reqno,line,stdat);
+				}
 			    printf("the request is addBatch\n");
 			    break;
 		    }
@@ -343,6 +354,7 @@ int datdif(int stdat[], int dat[]){
 	int diff;
 	int day = dat[2],year = dat[0] ,month = dat[1];
 	int stday = stdat[2],styear = stdat[0] ,stmonth = stdat[1];
+	int *request;
 	if (month > stmonth){  /*if the period is across two months*/
 		if ((stmonth == 4) || (stmonth == 6) || (stmonth == 9) || (stmonth == 11)){
 			day += 30;
@@ -385,10 +397,13 @@ int main(){
 	int* input();   	// initialize the function input and split
 	char **split();    
 	char all[N][80], **str;   //an array for saving all command for convenience for output
+	printf("~~WELCOM TO PolySME~~\n");
+	
 	while(request[0]>0){
 		printf("please enter booking/request:\n");
 		fgets(input,80,stdin);
-		strcpy(all[commandno++],input);
+		
+		printf("-> [Pending]\n");
 		
 		/* set the start date for the system */
 		if (reqno == 1){       //if this is the first command, take this book's date as the start time of the whole booking period
@@ -402,6 +417,7 @@ int main(){
 		
 		request = input(input ,reqno, stdat);
 		if (request[0]>0){
+			strcpy(all[commandno++],input);
 			reqNum[reqno] = request[0];
 			st[reqno] = request[1];
 			ed[reqno] = request[2];
@@ -411,8 +427,13 @@ int main(){
 				fNum[reqno][2] = request[5];
 				fNum[reqno][3] = request[6];
 			}
+			reqno++;
+			commandno++;
 		}
-		if (request[0] == -1){
+		/*else if(request[0] == 0){  for calculate schdule and print it out
+			printf()
+		}*/
+		else if (request[0] == -1){
 			printf("end of program, thanks for using!");
 			break;
 		}
