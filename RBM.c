@@ -4,6 +4,22 @@
 
 #define N 20  //The maximun acceptable number of request.
 #define M 100 //The maximun duration of all requests is two weeks time: 2*5(per week)*9(9am-6pm)=90.
+/*
+Use the following id numbers to represent different components:
+0 -- room_A
+1 -- room_B
+2 -- webcam_720p
+3 -- webcam_1080p
+4 -- monitor_50
+5 -- monitor_75
+6 -- projector_fhd
+7 -- projector_xga
+8 -- screen_100
+9 -- screen_150
+10 -- tenant_A
+11 -- tenant_B
+12 -- tenant_C
+*/
 
 
 /**
@@ -387,10 +403,47 @@ int datdif(int stdat[], int dat[]){
 	return diff;
 }
 
+/* this function converts an id --> a component name
+0 -- room_A
+1 -- room_B
+2 -- webcam_720p
+3 -- webcam_1080p
+4 -- monitor_50
+5 -- monitor_75
+6 -- projector_fhd
+7 -- projector_xga
+8 -- screen_100
+9 -- screen_150
+10 -- tenant_A
+11 -- tenant_B
+12 -- tenant_C
+*/
+char* id2component(int id)
+{
+	switch (id)
+	{
+		case 0	: return "room_A";
+		case 1	: return "room_B";
+		case 2	: return "webcam_720p";
+		case 3	: return "webcam_1080p";
+		case 4	: return "monitor_50";
+		case 5	: return "monitor_75";
+		case 6	: return "projector_fhd";
+		case 7	: return "projector_xga";
+		case 8	: return "screen_100";
+		case 9	: return "screen_150";
+		case 10	: return "tenant_A";
+		case 11	: return "tenant_B";
+		case 12	: return "tenant_C";
+	}
+}
 
-
+/* main program */
 int main(){
-	// 1. input module - input lines in cmd and lines in .dat files
+	// ##################################################
+	// ################## Input Module ##################
+	// ##################################################
+	// ***output module: for each request, i also need a variable named "type" (i.e. meeting/presentation/conference/device)
 	int reqNum[N],st[N],ed[N],fNum[N][5];
 	int i,reqno = 1,commandno;
 	int stdat[3] , *request;           // stdat an array saving the starting time of the whole booking period(2 weeks)
@@ -440,9 +493,9 @@ int main(){
 
 	}
 	
-	
-	// 2. scheduling module - comment your updated interface if there is any modification
-
+	// ###################################################
+	// ################ Scheduling Module ################
+	// ###################################################
 	///*for testing
 	reqNum[0]=1;
 	st[1]=1;
@@ -498,15 +551,109 @@ int main(){
 	st[11]=1;
 	ed[11]=1;
 	fNum[11][0]=1;fNum[11][1]=2;
-
-	//*/
 	
-	// 3. output module - print out the latest schedule and write into .dat files
-	// parent and child processes
-
 	int **reqStatus=greedy(reqNum,11,st,ed,fNum);
 	for (i=0;i<11;i++)
 		printf("request #%d %s\n", reqStatus[i][0],reqStatus[i][1]==1?"accept":"reject");
+	
+	// ###################################################
+	// ################## Output Module ##################
+	// ###################################################
+	
+	char title1[] = "***Room Booking ¨C ACCEPTED***";
+	char title2[] = "***Room Booking - REJECTED***";
+	char title3[] = "Performance:";
+	
+	// output files - FCFS_Schd.dat/PRIO_Schd.dat/OPTI_Schd.dat
+	char filename[15] = "fcfs";
+	//char filename[15] = "prio";
+	//char filename[15] = "opti";
+	strcat(filename, "_Schd.dat");
+	
+	// open and overwrite the corresponding output file
+	FILE *fptr;
+	fptr = fopen(filename, "w");
+	fprintf(fptr, "%s\n\n", title1);
+	fclose(fptr);
+	
+	// create the two necessary pipes - p2c and c2p
+	int p2c[2], c2p[2];
+	if (pipe(p2c) < 0)
+	{
+		printf("Pipe creation error\n");
+		exit(1);
+	}
+	if (pipe(c2p) < 0)
+	{
+		printf("Pipe creation error\n");
+		exit(1);
+	}
+	
+	// fork() 13 children - 10 facilities and 3 tenants
+	int id = -1;
+	for (i = 0; i < 13; i++)
+		if ((childpid = fork()) <= 0)
+		{
+			id = i;
+			break;
+		}
+	// fprintf(stderr, "This is process %ld with parent %ld\n", (long)getpid(), (long)getppid());
+	// printf("childpid: %d\n", childpid);
+	
+	if (childpid == -1)		// creation error //
+		printf("Child process creation error!\n");
+	else if (childpid > 0)	// parent execution //
+	{
+		// close the excessive ends
+		close(p2c[0]);
+		close(c2p[1]);
+		
+		// distribute the related booking records to children
+		char records_in_char[10];
+		int records;
+		// printf("Child: my id - %d size - %d\n", buffer, sizeof(buffer));
+		sprintf(records_in_char, "%d", records);
+		write(c2p[1], records_in_char, 10);
+		
+		// wait for child
+		wait(NULL);
+		
+		// close all the ends
+		close(p2c[1]);
+		close(c2p[0]);
+		exit(0);
+	}
+	else	// child execution //
+	{
+		// close the excessive ends
+		close(p2c[1]);
+		close(c2p[0]);
+		
+		// open and append to the corresponding output file
+		fptr = fopen(filename, "a");
+		fprintf(fptr, "%shas the following bookings:\n\n", id2component(id));
+		fprintf(fptr, "Date         Start   End     Type          Requester  Device\n", NULL);
+		fprintf(fptr, "===========================================================================\n", NULL);
+		
+		// receive and output the related booking records
+		long records[N][10];
+		int n;
+		for (i = 0; i < N; i++)
+		{
+			while ((n = read(c2p[0], records[i], 10)) > 0)
+			{
+				records[i][n] = 0;
+				fprintf(fptr, "%13s%8s%8s%14s%11s%s\n", records[i]);
+			}
+		}
+		printf("\n");
+		fclose(fptr);
+		
+		// close all the ends
+		close(p2c[0]);
+		close(c2p[1]);
+		exit(0);
+	}
 	
 	return 0;
 }
