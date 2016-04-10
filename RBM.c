@@ -153,6 +153,7 @@ variables: int firstword to save the place of first word
 	3:total no. of device in this booking,
 	4:dev1 number,
 	5:dev2 number
+	6:dev3 number (for request addpresent add conference)
 	
 		   
 */
@@ -257,19 +258,43 @@ switch (input[0])
 				
 		    case 'B':
 		    case 'b':
+			/* for reading a file, it return an array combining all request.
+			 result : 0: -2(indicator) 
+			 1:no. of request read 
+			 for any n elements after , store the n elements (append to the array requet by request)
+			 */
 				ofl=1;
 				FILE *fp;
 				char **flname;
 				char *line = NULL;
+				int placeA=2,sizeofarray;
 				size_t len = 0;
 				ssize_t read;
-				
+				result[0] = -2;
+				int *add;
+				result[1] = 0;
 				flname = split(splited[1],"-");
+				result = realloc(result,7*sizeof(int));
 				fp = fopen(flname[0],"r");
 				if (fp == NULL)
 					exit(EXIT_FAILURE);
 				while ((read = getline(&line, &len,fp)) != -1){
-					result = input(reqno,line,stdat);
+					if (result[1]>=1)
+					result = realloc((sizeofarray+5)*sizeof(int));
+					sizeofarray+=5;
+					add = input(reqno,line,stdat);
+					result[1]++;
+					result[placeA++] = reqno++;
+					result[placeA++] = add[1];
+					result[placeA++] = add[2];
+					result[placeA++] = add[3];
+					result[placeA++] = add[4];
+					if (add[3] == 3){
+						result = realloc((sizeofarray + 2)*sizeof(int));
+						sizeofarray+=2;
+						result[placeA++] = add[5];
+						result[placeA++] = add[6];
+					}
 				}
 			    printf("the request is addBatch\n");
 			    break;
@@ -381,6 +406,10 @@ int datdif(int stdat[], int dat[]){
 			day+=31;
 		}
 	}
+	if (year > styear){/* if the period across two year*/
+		dat+=31;
+		
+	}
 	
 	
 	diff = day - stday;
@@ -392,7 +421,7 @@ int datdif(int stdat[], int dat[]){
 int main(){
 	// 1. input module - input lines in cmd and lines in .dat files
 	int reqNum[N],st[N],ed[N],fNum[N][5];
-	int i,reqno = 1,commandno;
+	int i,reqno = 0,commandno;
 	int stdat[3] , *request;           // stdat an array saving the starting time of the whole booking period(2 weeks)
 	int* input();   	// initialize the function input and split
 	char **split();    
@@ -423,7 +452,7 @@ int main(){
 			ed[reqno] = request[2];
 			fNum[reqno][0] = request[3];
 			fNum[reqno][1] = request[4];
-			if (result[0] == 3){
+			if (result[3] == 3){
 				fNum[reqno][2] = request[5];
 				fNum[reqno][3] = request[6];
 			}
@@ -436,6 +465,27 @@ int main(){
 		else if (request[0] == -1){
 			printf("end of program, thanks for using!");
 			break;
+		}
+		else if (request[0] == -2){ /* read input from a batch file */
+			int numreq = request[1];
+			int place = 2;
+			strcpy(all[commandno++],input);
+			for (i=0;i<numreq;i++){
+				reqNum[reqno] = request[place++];
+				st[reqno] = request[place++];
+				ed[reqno] = request[place++];
+				fNum[reqno][0] = request[place++];
+				fNum[reqno][1] = request[place++];
+				if (result[3] == 3){
+					fNum[reqno][2] = request[place++];
+					fNum[reqno][3] = request[place++];
+				}
+				reqno++;
+				commandno++;
+			}
+			request[0] =0;
+			
+			
 		}
 
 	}
