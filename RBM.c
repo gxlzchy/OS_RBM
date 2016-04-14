@@ -610,5 +610,112 @@ int main(){
 	int **reqStatus=greedy(reqNum,11,st,ed,fNum);
 	for (i=0;i<11;i++)
 		printf("request #%d %s\n", reqStatus[i][0],reqStatus[i][1]==1?"accept":"reject");
+
+
+	// ###################################################
+	// ################## Output Module ##################
+	// ###################################################
+	
+	char title1[] = "***Room Booking - ACCEPTED***";
+	char title2[] = "***Room Booking - REJECTED***";
+	char title3[] = "Performance:";
+	
+	// output files - FCFS_Schd.dat/PRIO_Schd.dat/OPTI_Schd.dat
+	char filename[15] = "fcfs";
+	//char filename[15] = "prio";
+	//char filename[15] = "opti";
+	strcat(filename, "_Schd.dat");
+	
+	// open and overwrite the corresponding output file
+	FILE *fptr;
+	fptr = fopen(filename, "w");
+	fprintf(fptr, "%s\n\n", title1);
+	fclose(fptr);
+	
+	// create the two necessary pipes - p2c and c2p
+	int p2c[2], c2p[2];
+	if (pipe(p2c) < 0)
+	{
+		printf("Pipe creation error\n");
+		exit(1);
+	}
+	if (pipe(c2p) < 0)
+	{
+		printf("Pipe creation error\n");
+		exit(1);
+	}
+	
+	// fork() 13 children - 10 facilities and 3 tenants
+	int id = -1;
+	for (i = 0; i < 13; i++)
+		if ((childpid = fork()) <= 0)
+		{
+			id = i;
+			break;
+		}
+	// fprintf(stderr, "This is process %ld with parent %ld\n", (long)getpid(), (long)getppid());
+	// printf("childpid: %d\n", childpid);
+	
+	if (childpid == -1)		// creation error //
+		printf("Child process creation error!\n");
+	else if (childpid > 0)	// parent execution //
+	{
+		// close the excessive ends
+		close(p2c[0]);
+		close(c2p[1]);
+		
+		// distribute the related booking records to children
+		char records_in_char[10];
+		int records;
+		// printf("Child: my id - %d size - %d\n", buffer, sizeof(buffer));
+		sprintf(records_in_char, "%d", records);
+		write(c2p[1], records_in_char, 10);
+		
+		// wait for child
+		wait(NULL);
+		
+		// close all the ends
+		close(p2c[1]);
+		close(c2p[0]);
+		exit(0);
+	}
+	else	// child execution //
+	{
+		// close the excessive ends
+		close(p2c[1]);
+		close(c2p[0]);
+		
+		// open and append to the corresponding output file
+		fptr = fopen(filename, "a");
+		fprintf(fptr, "%shas the following bookings:\n\n", id2component(id));
+		fprintf(fptr, "Date         Start   End     Type          Requester  Device\n", NULL);
+		fprintf(fptr, "===========================================================================\n", NULL);
+		
+		// receive and output the related booking records
+		long records[N][10];
+		int n;
+		for (i = 0; i < N; i++)
+		{
+			while ((n = read(c2p[0], records[i], 10)) > 0)
+			{
+				records[i][n] = 0;
+				fprintf(fptr, "%13s%8s%8s%14s%11s%s\n", records[i]);
+			}
+		}
+		printf("\n");
+		fclose(fptr);
+		
+		// close all the ends
+		close(p2c[0]);
+		close(c2p[1]);
+		exit(0);
+	}
+	
+
+
+
+
+
+
 	return 0;
 }
