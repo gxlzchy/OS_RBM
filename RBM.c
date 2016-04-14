@@ -554,9 +554,13 @@ int main(){
 			char title2[] = "***Room Booking - REJECTED***";
 			char title3[] = "Performance:";
 			
+			// open and overwrite the corresponding output file
+			FILE *fptr;
+			fptr = fopen("Schd.dat", "w");
+			
 			// print out for testing
 			// ###Room Booking - ACCEPTED###
-			printf("%s\n\n", title1);
+			fprintf(fptr, "%s\n\n", title1);
 			
 			int fid, num_bookings;	// facility number
 			int utilization[10];
@@ -566,9 +570,9 @@ int main(){
 			for (fid = 1; fid <= 10; fid++)	// for each facility
 			{
 				num_bookings = 0;
-				printf("[%s] has the following bookings:\n\n", id2component(fid));
-				printf("ID   Date         Start   End     Type          Requester  Device\n");
-				printf("================================================================================\n");
+				fprintf(fptr, "[%s] has the following bookings:\n\n", id2component(fid));
+				fprintf(fptr, "ID   Date         Start   End     Type          Requester  Device\n");
+				fprintf(fptr, "================================================================================\n");
 				
 				for (i = 0; i < num_requests; i++)	// for each scheduled booking
 				{
@@ -585,35 +589,35 @@ int main(){
 								char period[2][6];
 								sprintf(period[0], "%d:00", st[reqStatus[i][0]] + 9);
 								sprintf(period[1], "%d:00", ed[reqStatus[i][0]] + 9);
-								printf("%-5d%-13s%-8s%-8s%-14s%-11s%s\n", reqStatus[i][0], "YYYY-MM-DD", period[0], period[1], "undefined", "undefined", id2component(fNum[reqStatus[i][0]][1]));
+								fprintf(fptr, "%-5d%-13s%-8s%-8s%-14s%-11s%s\n", reqStatus[i][0], "YYYY-MM-DD", period[0], period[1], "undefined", "undefined", id2component(fNum[reqStatus[i][0]][1]));
 								for (k = 2; k <= fNum[reqStatus[i][0]][0]; k++)
-									printf("                                                           %s\n", id2component(fNum[reqStatus[i][0]][k]));
+									fprintf(fptr, "                                                           %s\n", id2component(fNum[reqStatus[i][0]][k]));
 								num_bookings++;
 							}
 						}
 					}
 				}
-				printf("################################################################################\n");
+				fprintf(fptr, "################################################################################\n");
 				if (num_bookings == 0)
-					printf("#                  There is no any booking for this facility.                  #\n");
+					fprintf(fptr, "#                  There is no any booking for this facility.                  #\n");
 				else
-					printf("#                There is/are [%2d] booking(s) for this facility.               #\n", num_bookings);
-				printf("################################################################################\n");
-				printf("\n\n\n");
+					fprintf(fptr, "#                There is/are [%2d] booking(s) for this facility.               #\n", num_bookings);
+				fprintf(fptr, "################################################################################\n");
+				fprintf(fptr, "\n\n\n");
 			}
-			printf("     -End-     \n\n");
+			fprintf(fptr, "     -End-     \n\n");
 			
 			
 			// ###Room Booking - REJECTED###
-			printf("%s\n\n", title2);
+			fprintf(fptr, "%s\n\n", title2);
 			int num_rejection;
 			
 			for (fid = 1; fid <= 10; fid++)	// for each facility
 			{
 				num_rejection = 0;
-				printf("[%s] has the following bookings rejected:\n\n", id2component(fid));
-				printf("ID   Date         Start   End     Type          Requester  Device\n");
-				printf("================================================================================\n");
+				fprintf(fptr, "[%s] has the following bookings rejected:\n\n", id2component(fid));
+				fprintf(fptr, "ID   Date         Start   End     Type          Requester  Device\n");
+				fprintf(fptr, "================================================================================\n");
 				
 				for (i = 0; i < num_requests; i++)	// for each scheduled booking
 				{
@@ -629,38 +633,40 @@ int main(){
 								char period[2][6];
 								sprintf(period[0], "%d:00", st[reqStatus[i][0]] + 9);
 								sprintf(period[1], "%d:00", ed[reqStatus[i][0]] + 9);
-								printf("%-5d%-13s%-8s%-8s%-14s%-11s%s\n", reqStatus[i][0], "YYYY-MM-DD", period[0], period[1], "undefined", "undefined", id2component(fNum[reqStatus[i][0]][1]));
+								fprintf(fptr, "%-5d%-13s%-8s%-8s%-14s%-11s%s\n", reqStatus[i][0], "YYYY-MM-DD", period[0], period[1], "undefined", "undefined", id2component(fNum[reqStatus[i][0]][1]));
 								for (k = 2; k <= fNum[reqStatus[i][0]][0]; k++)
-									printf("                                                           %s\n", id2component(fNum[reqStatus[i][0]][k]));
+									fprintf(fptr, "                                                           %s\n", id2component(fNum[reqStatus[i][0]][k]));
 								num_rejection++;
 							}
 						}
 					}
 				}
-				printf("################################################################################\n");
+				fprintf(fptr, "################################################################################\n");
 				if (num_rejection == 0)
-					printf("#              There is no any booking rejected for this facility.             #\n");
+					fprintf(fptr, "#              There is no any booking rejected for this facility.             #\n");
 				else
-					printf("#            There is/are [%2d] booking(s) rejected for this facility.          #\n", num_rejection);
-				printf("################################################################################\n");
-				printf("\n\n\n");
+					fprintf(fptr, "#            There is/are [%2d] booking(s) rejected for this facility.          #\n", num_rejection);
+				fprintf(fptr, "################################################################################\n");
+				fprintf(fptr, "\n\n\n");
 			}
-			printf("     -End-     \n\n");
+			fprintf(fptr, "     -End-     \n\n");
+			fclose(fptr);
 			
 			// ###Performance###
-			printf("%s\n\n", title3);
+			fptr = fopen("Summary.dat", "w");
+			fprintf(fptr, "%s\n\n", title3);
 			
 			int total = total_accepted + total_rejected;
-			printf("Total Number of Bookings Received: [%3d]\n", total);
-			printf("      Number of Bookings Assigned: [%3d] (%.1f%)\n", total_accepted, (float)total_accepted / total * 100);
-			printf("      Number of Bookings Rejected: [%3d] (%.1f%)\n", total_rejected, (float)total_rejected / total * 100);
-			printf("\n");
-			printf("Utilization of Time Slot:\n\n");
+			fprintf(fptr, "Total Number of Bookings Received: [%3d]\n", total);
+			fprintf(fptr, "      Number of Bookings Assigned: [%3d] (%.1f%)\n", total_accepted, (float)total_accepted / total * 100);
+			fprintf(fptr, "      Number of Bookings Rejected: [%3d] (%.1f%)\n", total_rejected, (float)total_rejected / total * 100);
+			fprintf(fptr, "\n");
+			fprintf(fptr, "Utilization of Time Slot:\n\n");
 			for (fid = 1; fid <= 10; fid++)	// for each facility
 			{
-				printf("      %-13s - [%.1f%]\n", id2component(fid), (float)utilization[fid - 1] / M * 100);
+				fprintf(fptr, "      %-13s - [%.1f%]\n", id2component(fid), (float)utilization[fid - 1] / M * 100);
 			}
-			printf("\n     -End-     \n\n");
+			fprintf(fptr, "\n     -End-     \n\n");
 			
 			// ###################################################
 			// ###################################################
@@ -694,7 +700,6 @@ int main(){
 			
 		}
 	}
-	
 	/*
 	// ###################################################
 	// ################ Scheduling Module ################
@@ -781,9 +786,13 @@ int main(){
 	char title2[] = "***Room Booking - REJECTED***";
 	char title3[] = "Performance:";
 	
+	// open and overwrite the corresponding output file
+	FILE *fptr;
+	fptr = fopen("Schd.dat", "w");
+	
 	// print out for testing
 	// ###Room Booking - ACCEPTED###
-	printf("%s\n\n", title1);
+	fprintf(fptr, "%s\n\n", title1);
 	
 	int fid, num_bookings;	// facility number
 	int utilization[10];
@@ -793,9 +802,9 @@ int main(){
 	for (fid = 1; fid <= 10; fid++)	// for each facility
 	{
 		num_bookings = 0;
-		printf("[%s] has the following bookings:\n\n", id2component(fid));
-		printf("ID   Date         Start   End     Type          Requester  Device\n");
-		printf("================================================================================\n");
+		fprintf(fptr, "[%s] has the following bookings:\n\n", id2component(fid));
+		fprintf(fptr, "ID   Date         Start   End     Type          Requester  Device\n");
+		fprintf(fptr, "================================================================================\n");
 		
 		for (i = 0; i < num_requests; i++)	// for each scheduled booking
 		{
@@ -812,35 +821,35 @@ int main(){
 						char period[2][6];
 						sprintf(period[0], "%d:00", st[reqStatus[i][0]] + 9);
 						sprintf(period[1], "%d:00", ed[reqStatus[i][0]] + 9);
-						printf("%-5d%-13s%-8s%-8s%-14s%-11s%s\n", reqStatus[i][0], "YYYY-MM-DD", period[0], period[1], "undefined", "undefined", id2component(fNum[reqStatus[i][0]][1]));
+						fprintf(fptr, "%-5d%-13s%-8s%-8s%-14s%-11s%s\n", reqStatus[i][0], "YYYY-MM-DD", period[0], period[1], "undefined", "undefined", id2component(fNum[reqStatus[i][0]][1]));
 						for (k = 2; k <= fNum[reqStatus[i][0]][0]; k++)
-							printf("                                                           %s\n", id2component(fNum[reqStatus[i][0]][k]));
+							fprintf(fptr, "                                                           %s\n", id2component(fNum[reqStatus[i][0]][k]));
 						num_bookings++;
 					}
 				}
 			}
 		}
-		printf("################################################################################\n");
+		fprintf(fptr, "################################################################################\n");
 		if (num_bookings == 0)
-			printf("#                  There is no any booking for this facility.                  #\n");
+			fprintf(fptr, "#                  There is no any booking for this facility.                  #\n");
 		else
-			printf("#                There is/are [%2d] booking(s) for this facility.               #\n", num_bookings);
-		printf("################################################################################\n");
-		printf("\n\n\n");
+			fprintf(fptr, "#                There is/are [%2d] booking(s) for this facility.               #\n", num_bookings);
+		fprintf(fptr, "################################################################################\n");
+		fprintf(fptr, "\n\n\n");
 	}
-	printf("     -End-     \n\n");
+	fprintf(fptr, "     -End-     \n\n");
 	
 	
 	// ###Room Booking - REJECTED###
-	printf("%s\n\n", title2);
+	fprintf(fptr, "%s\n\n", title2);
 	int num_rejection;
 	
 	for (fid = 1; fid <= 10; fid++)	// for each facility
 	{
 		num_rejection = 0;
-		printf("[%s] has the following bookings rejected:\n\n", id2component(fid));
-		printf("ID   Date         Start   End     Type          Requester  Device\n");
-		printf("================================================================================\n");
+		fprintf(fptr, "[%s] has the following bookings rejected:\n\n", id2component(fid));
+		fprintf(fptr, "ID   Date         Start   End     Type          Requester  Device\n");
+		fprintf(fptr, "================================================================================\n");
 		
 		for (i = 0; i < num_requests; i++)	// for each scheduled booking
 		{
@@ -856,40 +865,42 @@ int main(){
 						char period[2][6];
 						sprintf(period[0], "%d:00", st[reqStatus[i][0]] + 9);
 						sprintf(period[1], "%d:00", ed[reqStatus[i][0]] + 9);
-						printf("%-5d%-13s%-8s%-8s%-14s%-11s%s\n", reqStatus[i][0], "YYYY-MM-DD", period[0], period[1], "undefined", "undefined", id2component(fNum[reqStatus[i][0]][1]));
+						fprintf(fptr, "%-5d%-13s%-8s%-8s%-14s%-11s%s\n", reqStatus[i][0], "YYYY-MM-DD", period[0], period[1], "undefined", "undefined", id2component(fNum[reqStatus[i][0]][1]));
 						for (k = 2; k <= fNum[reqStatus[i][0]][0]; k++)
-							printf("                                                           %s\n", id2component(fNum[reqStatus[i][0]][k]));
+							fprintf(fptr, "                                                           %s\n", id2component(fNum[reqStatus[i][0]][k]));
 						num_rejection++;
 					}
 				}
 			}
 		}
-		printf("################################################################################\n");
+		fprintf(fptr, "################################################################################\n");
 		if (num_rejection == 0)
-			printf("#              There is no any booking rejected for this facility.             #\n");
+			fprintf(fptr, "#              There is no any booking rejected for this facility.             #\n");
 		else
-			printf("#            There is/are [%2d] booking(s) rejected for this facility.          #\n", num_rejection);
-		printf("################################################################################\n");
-		printf("\n\n\n");
+			fprintf(fptr, "#            There is/are [%2d] booking(s) rejected for this facility.          #\n", num_rejection);
+		fprintf(fptr, "################################################################################\n");
+		fprintf(fptr, "\n\n\n");
 	}
-	printf("     -End-     \n\n");
+	fprintf(fptr, "     -End-     \n\n");
+	fclose(fptr);
 	
 	// ###Performance###
-	printf("%s\n\n", title3);
+	fptr = fopen("Summary.dat", "w");
+	fprintf(fptr, "%s\n\n", title3);
 	
 	int total = total_accepted + total_rejected;
-	printf("Total Number of Bookings Received: [%3d]\n", total);
-	printf("      Number of Bookings Assigned: [%3d] (%.1f%)\n", total_accepted, (float)total_accepted / total * 100);
-	printf("      Number of Bookings Rejected: [%3d] (%.1f%)\n", total_rejected, (float)total_rejected / total * 100);
-	printf("\n");
-	printf("Utilization of Time Slot:\n\n");
+	fprintf(fptr, "Total Number of Bookings Received: [%3d]\n", total);
+	fprintf(fptr, "      Number of Bookings Assigned: [%3d] (%.1f%)\n", total_accepted, (float)total_accepted / total * 100);
+	fprintf(fptr, "      Number of Bookings Rejected: [%3d] (%.1f%)\n", total_rejected, (float)total_rejected / total * 100);
+	fprintf(fptr, "\n");
+	fprintf(fptr, "Utilization of Time Slot:\n\n");
 	for (fid = 1; fid <= 10; fid++)	// for each facility
 	{
-		printf("      %-13s - [%.1f%]\n", id2component(fid), (float)utilization[fid - 1] / M * 100);
+		fprintf(fptr, "      %-13s - [%.1f%]\n", id2component(fid), (float)utilization[fid - 1] / M * 100);
 	}
-	printf("\n     -End-     \n\n");
-	
-	// output files - FCFS_Schd.dat/PRIO_Schd.dat/OPTI_Schd.dat
+	fprintf(fptr, "\n     -End-     \n\n");
+	*/
+	/*// output files - FCFS_Schd.dat/PRIO_Schd.dat/OPTI_Schd.dat
 	char filename[15] = "fcfs";
 	//char filename[15] = "prio";
 	//char filename[15] = "opti";
