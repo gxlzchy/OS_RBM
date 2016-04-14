@@ -467,6 +467,7 @@ char* id2component(int id)
 
 
 
+/* this function forks child processes to output the schedules to _Schd.dat and Summary.dat */
 void output2dat(int reqNum[], int num_requests, int st[], int ed[],int fNum[][5], int **reqStatus, int total_accepted, int total_rejected)
 {
 	// ###################################################
@@ -483,15 +484,29 @@ void output2dat(int reqNum[], int num_requests, int st[], int ed[],int fNum[][5]
 	char title2[] = "***Room Booking - REJECTED***";
 	char title3[] = "Performance:";
 	
+	// output files - FCFS_Schd.dat/PRIO_Schd.dat/OPTI_Schd.dat
+	char filename[15] = "fcfs";
+	//char filename[15] = "prio";
+	//char filename[15] = "opti";
+	strcat(filename, "_Schd.dat");
+	
+	// ###Room Booking - ACCEPTED###
 	// open and overwrite the corresponding output file
 	FILE *fptr;
-	fptr = fopen("Schd.dat", "w");
-	
-	// print out for testing
-	// ###Room Booking - ACCEPTED###
+	fptr = fopen(filename, "w");
 	fprintf(fptr, "%s\n\n", title1);
+	fclose(fptr);
 	
-	int fid, num_bookings;	// facility number
+	// create the pipe
+	int fd[10][2];
+	for (i = 0; i < 10; i++)
+		if (pipe(fd[i]) < 0)
+		{
+			printf("Pipe creation error\n");
+			exit(1);
+		}
+	
+	int fid, childpid, num_bookings;	// facility number
 	int utilization[10];
 	for (i = 0; i < 10; i++)
 		utilization[i] = 0;
@@ -499,85 +514,202 @@ void output2dat(int reqNum[], int num_requests, int st[], int ed[],int fNum[][5]
 	for (fid = 1; fid <= 10; fid++)	// for each facility
 	{
 		num_bookings = 0;
-		fprintf(fptr, "[%s] has the following bookings:\n\n", id2component(fid));
-		fprintf(fptr, "ID   Date         Start   End     Type          Requester  Device\n");
-		fprintf(fptr, "================================================================================\n");
-		
-		for (i = 0; i < num_requests; i++)	// for each scheduled booking
+		childpid = fork();
+		if (childpid == -1)		// creation error //
+			printf("Child process creation error!\n");
+		else if (childpid == 0)	// child execution //
 		{
-			if (reqStatus[i][1] == 1)	// if the booking is accepted
+			// close the excessive end
+			close(fd[fid-1][1]);
+			
+			// open and append to the corresponding output file
+			fptr = fopen(filename, "a");
+			fprintf(fptr, "Child %d: [%s] has the following bookings:\n\n", getpid(), id2component(fid));
+			fprintf(fptr, "ID   Date         Start   End     Type          Requester  Facility\n");
+			fprintf(fptr, "================================================================================\n");
+			
+			// receive and output the related booking records
+			
+			int n, rid;	// record id
+			char buffer[10];
+			read(fd[fid-1][0], buffer, 10);
+			n = atoi(buffer);
+			int records[n];
+			for (i = 0; i < n; i++)
 			{
-				// if the accepted booking involves the facility
-				for (j = 0; j < fNum[reqStatus[i][0]][0]; j++)
+				read(fd[fid-1][0], buffer, 10);
+				records[i] = atoi(buffer);
+				//date = split(input, " ")[2]
+				//requester = split(input, " ")[5]
+				char period[2][6];
+				sprintf(period[0], "%d:00", st[records[i]] + 9);
+				sprintf(period[1], "%d:00", ed[records[i]] + 9);
+				fprintf(fptr, "%-5d%-13s%-8s%-8s%-14s%-11s%s\n", records[i], "YYYY-MM-DD", period[0], period[1], "undefined", "undefined", id2component(fNum[records[i]][1]));
+				for (k = 2; k <= fNum[records[i]][0]; k++)
+					fprintf(fptr, "                                                           %s\n", id2component(fNum[records[i]][k]));
+				num_bookings++;
+			}
+			
+			fprintf(fptr, "################################################################################\n");
+			if (num_bookings == 0)
+				fprintf(fptr, "#                  There is no any booking for this facility.                  #\n");
+			else
+				fprintf(fptr, "#                There is/are [%2d] booking(s) for this facility.               #\n", num_bookings);
+			fprintf(fptr, "################################################################################\n");
+			fprintf(fptr, "\n\n\n");
+			fclose(fptr);
+			
+			// close all the ends
+			close(fd[fid-1][0]);
+			exit(0);
+		}
+		else	// parent execution //
+		{
+			// close the excessive end
+			close(fd[fid-1][0]);
+			
+			// distribute the related booking records to children
+			int records[N], n;
+			for (i = 0; i < num_requests; i++)	// for each scheduled booking
+			{
+				if (reqStatus[i][1] == 1)	// if the booking is accepted
 				{
-					if (fNum[reqStatus[i][0]][j+1] == fid)
+					// if the accepted booking involves the facility
+					for (j = 0; j < fNum[reqStatus[i][0]][0]; j++)
 					{
-						//date = split(input, " ")[2]
-						//requester = split(input, " ")[5]
-						utilization[fid - 1] += ed[reqStatus[i][0]] - st[reqStatus[i][0]];
-						char period[2][6];
-						sprintf(period[0], "%d:00", st[reqStatus[i][0]] + 9);
-						sprintf(period[1], "%d:00", ed[reqStatus[i][0]] + 9);
-						fprintf(fptr, "%-5d%-13s%-8s%-8s%-14s%-11s%s\n", reqStatus[i][0], "YYYY-MM-DD", period[0], period[1], "undefined", "undefined", id2component(fNum[reqStatus[i][0]][1]));
-						for (k = 2; k <= fNum[reqStatus[i][0]][0]; k++)
-							fprintf(fptr, "                                                           %s\n", id2component(fNum[reqStatus[i][0]][k]));
-						num_bookings++;
+						if (fNum[reqStatus[i][0]][j+1] == fid)
+						{
+							utilization[fid - 1] += ed[reqStatus[i][0]] - st[reqStatus[i][0]];
+							records[num_bookings++] = reqStatus[i][0];
+						}
 					}
 				}
 			}
+			char buffer[10];
+			n = sprintf(buffer, "%d", num_bookings);
+			write(fd[fid-1][1], buffer, 10);
+			for (i = 0; i < num_bookings; i++)
+			{
+				n = sprintf(buffer, "%d", records[i]);
+				write(fd[fid-1][1], buffer, 10);
+			}
+			
+			// wait for child
+			wait(NULL);
+			
+			// close all the ends
+			close(fd[fid-1][1]);
 		}
-		fprintf(fptr, "################################################################################\n");
-		if (num_bookings == 0)
-			fprintf(fptr, "#                  There is no any booking for this facility.                  #\n");
-		else
-			fprintf(fptr, "#                There is/are [%2d] booking(s) for this facility.               #\n", num_bookings);
-		fprintf(fptr, "################################################################################\n");
-		fprintf(fptr, "\n\n\n");
 	}
+	fptr = fopen(filename, "a");
 	fprintf(fptr, "     -End-     \n\n");
 	
-	
 	// ###Room Booking - REJECTED###
+	// open and append to the corresponding output file
 	fprintf(fptr, "%s\n\n", title2);
+	fclose(fptr);
+	
+	// create the pipe
+	int fd2[10][2];
+	for (i = 0; i < 10; i++)
+		if (pipe(fd2[i]) < 0)
+		{
+			printf("Pipe creation error\n");
+			exit(1);
+		}
+	
 	int num_rejection;
 	
 	for (fid = 1; fid <= 10; fid++)	// for each facility
 	{
 		num_rejection = 0;
-		fprintf(fptr, "[%s] has the following bookings rejected:\n\n", id2component(fid));
-		fprintf(fptr, "ID   Date         Start   End     Type          Requester  Device\n");
-		fprintf(fptr, "================================================================================\n");
-		
-		for (i = 0; i < num_requests; i++)	// for each scheduled booking
+		childpid = fork();
+		if (childpid == -1)		// creation error //
+			printf("Child process creation error!\n");
+		else if (childpid == 0)	// child execution //
 		{
-			if (reqStatus[i][1] == 0)	// if the booking is rejected
+			// close the excessive end
+			close(fd2[fid-1][1]);
+			
+			// open and append to the corresponding output file
+			fptr = fopen(filename, "a");
+			fprintf(fptr, "Child %d: [%s] has the following bookings:\n\n", getpid(), id2component(fid));
+			fprintf(fptr, "ID   Date         Start   End     Type          Requester  Facility\n");
+			fprintf(fptr, "================================================================================\n");
+			
+			// receive and output the related booking records
+			
+			int n, rid;	// record id
+			char buffer[10];
+			read(fd2[fid-1][0], buffer, 10);
+			n = atoi(buffer);
+			int records[n];
+			for (i = 0; i < n; i++)
 			{
-				// if the accepted booking involves the facility
-				for (j = 0; j < fNum[reqStatus[i][0]][0]; j++)
+				read(fd2[fid-1][0], buffer, 10);
+				records[i] = atoi(buffer);
+				//date = split(input, " ")[2]
+				//requester = split(input, " ")[5]
+				char period[2][6];
+				sprintf(period[0], "%d:00", st[records[i]] + 9);
+				sprintf(period[1], "%d:00", ed[records[i]] + 9);
+				fprintf(fptr, "%-5d%-13s%-8s%-8s%-14s%-11s%s\n", records[i], "YYYY-MM-DD", period[0], period[1], "undefined", "undefined", id2component(fNum[records[i]][1]));
+				for (k = 2; k <= fNum[records[i]][0]; k++)
+					fprintf(fptr, "                                                           %s\n", id2component(fNum[records[i]][k]));
+				num_rejection++;
+			}
+			
+			fprintf(fptr, "################################################################################\n");
+			if (num_rejection == 0)
+				fprintf(fptr, "#              There is no any booking rejected for this facility.             #\n");
+			else
+				fprintf(fptr, "#            There is/are [%2d] booking(s) rejected for this facility.          #\n", num_rejection);
+			fprintf(fptr, "################################################################################\n");
+			fprintf(fptr, "\n\n\n");
+			fclose(fptr);
+			
+			// close all the ends
+			close(fd2[fid-1][0]);
+			exit(0);
+		}
+		else	// parent execution //
+		{
+			// close the excessive end
+			close(fd2[fid-1][0]);
+			
+			// distribute the related booking records to children
+			int records[N], n;
+			for (i = 0; i < num_requests; i++)	// for each scheduled booking
+			{
+				if (reqStatus[i][1] == 0)	// if the booking is rejected
 				{
-					if (fNum[reqStatus[i][0]][j+1] == fid)
+					// if the accepted booking involves the facility
+					for (j = 0; j < fNum[reqStatus[i][0]][0]; j++)
 					{
-						//date = split(input, " ")[2]
-						//requester = split(input, " ")[5]
-						char period[2][6];
-						sprintf(period[0], "%d:00", st[reqStatus[i][0]] + 9);
-						sprintf(period[1], "%d:00", ed[reqStatus[i][0]] + 9);
-						fprintf(fptr, "%-5d%-13s%-8s%-8s%-14s%-11s%s\n", reqStatus[i][0], "YYYY-MM-DD", period[0], period[1], "undefined", "undefined", id2component(fNum[reqStatus[i][0]][1]));
-						for (k = 2; k <= fNum[reqStatus[i][0]][0]; k++)
-							fprintf(fptr, "                                                           %s\n", id2component(fNum[reqStatus[i][0]][k]));
-						num_rejection++;
+						if (fNum[reqStatus[i][0]][j+1] == fid)
+						{
+							records[num_rejection++] = reqStatus[i][0];
+						}
 					}
 				}
 			}
+			char buffer[10];
+			n = sprintf(buffer, "%d", num_rejection);
+			write(fd2[fid-1][1], buffer, 10);
+			for (i = 0; i < num_rejection; i++)
+			{
+				n = sprintf(buffer, "%d", records[i]);
+				write(fd2[fid-1][1], buffer, 10);
+			}
+			
+			// wait for child
+			wait(NULL);
+			
+			// close all the ends
+			close(fd2[fid-1][1]);
 		}
-		fprintf(fptr, "################################################################################\n");
-		if (num_rejection == 0)
-			fprintf(fptr, "#              There is no any booking rejected for this facility.             #\n");
-		else
-			fprintf(fptr, "#            There is/are [%2d] booking(s) rejected for this facility.          #\n", num_rejection);
-		fprintf(fptr, "################################################################################\n");
-		fprintf(fptr, "\n\n\n");
 	}
+	fptr = fopen(filename, "a");
 	fprintf(fptr, "     -End-     \n\n");
 	fclose(fptr);
 	
@@ -596,6 +728,7 @@ void output2dat(int reqNum[], int num_requests, int st[], int ed[],int fNum[][5]
 		fprintf(fptr, "      %-13s - [%.1f%]\n", id2component(fid), (float)utilization[fid - 1] / M * 100);
 	}
 	fprintf(fptr, "\n     -End-     \n\n");
+	fclose(fptr);
 }
 
 
@@ -649,11 +782,11 @@ int main(){
 			reqno++;
 			commandno++;
 		}
-		else if(request[0] == 0)	// receive an input of printSche
+		else if(request[0] == 0)
 		{
 			// ###################################################
 			// ###################################################
-			// #################### PrintSche ####################
+			// #################### PrintSchd ####################
 			// ###################################################
 			// ###################################################
 			
@@ -668,14 +801,14 @@ int main(){
 					total_accepted++;
 				else
 					total_rejected++;
-				printf("request #%d %s\n", reqStatus[i][0], reqStatus[i][1]==1?"accept":"reject");
+				//printf("request #%d %s\n", reqStatus[i][0], reqStatus[i][1]==1?"accept":"reject");
 			}
 			
 			output2dat(reqNum, num_requests, st, ed, fNum, reqStatus, total_accepted, total_rejected);
 			
 			// ###################################################
 			// ###################################################
-			// ################# End of PrintSche ################
+			// ################# End of PrintSchd ################
 			// ###################################################
 			// ###################################################
 		}
@@ -709,7 +842,7 @@ int main(){
 	// ###################################################
 	// ################ Scheduling Module ################
 	// ###################################################
-	///*for testing
+	// for testing
 	reqNum[0]=1;
 	st[1]=1;
 	ed[1]=5;
@@ -780,97 +913,6 @@ int main(){
 	}
 	
 	output2dat(reqNum, num_requests, st, ed, fNum, reqStatus, total_accepted, total_rejected);
-	
-	// output files - FCFS_Schd.dat/PRIO_Schd.dat/OPTI_Schd.dat
-	char filename[15] = "fcfs";
-	//char filename[15] = "prio";
-	//char filename[15] = "opti";
-	strcat(filename, "_Schd.dat");
-	
-	// open and overwrite the corresponding output file
-	FILE *fptr;
-	fptr = fopen(filename, "w");
-	fprintf(fptr, "%s\n\n", title1);
-	fclose(fptr);
-	
-	// create the two necessary pipes - p2c and c2p
-	int p2c[2], c2p[2];
-	if (pipe(p2c) < 0)
-	{
-		printf("Pipe creation error\n");
-		exit(1);
-	}
-	if (pipe(c2p) < 0)
-	{
-		printf("Pipe creation error\n");
-		exit(1);
-	}
-	
-	// fork() 13 children - 10 facilities and 3 tenants
-	int id = -1, childpid;
-	for (i = 0; i < 13; i++)
-		if ((childpid = fork()) <= 0)
-		{
-			id = i;
-			break;
-		}
-	// fprintf(stderr, "This is process %ld with parent %ld\n", (long)getpid(), (long)getppid());
-	// printf("childpid: %d\n", childpid);
-	
-	if (childpid == -1)		// creation error //
-		printf("Child process creation error!\n");
-	else if (childpid > 0)	// parent execution //
-	{
-		// close the excessive ends
-		close(p2c[0]);
-		close(c2p[1]);
-		
-		// distribute the related booking records to children
-		char records_in_char[10];
-		int records;
-		// printf("Child: my id - %d size - %d\n", buffer, sizeof(buffer));
-		sprintf(records_in_char, "%d", records);
-		write(c2p[1], records_in_char, 10);
-		
-		// wait for child
-		wait(NULL);
-		
-		// close all the ends
-		close(p2c[1]);
-		close(c2p[0]);
-		exit(0);
-	}
-	else	// child execution //
-	{
-		// close the excessive ends
-		close(p2c[1]);
-		close(c2p[0]);
-		
-		// open and append to the corresponding output file
-		fptr = fopen(filename, "a");
-		fprintf(fptr, "%shas the following bookings:\n\n", id2component(id));
-		fprintf(fptr, "Date         Start   End     Type          Requester  Device\n", NULL);
-		fprintf(fptr, "===========================================================================\n", NULL);
-		
-		// receive and output the related booking records
-		long records[N][10];
-		int n;
-		for (i = 0; i < N; i++)
-		{
-			while ((n = read(c2p[0], records[i], 10)) > 0)
-			{
-				records[i][n] = 0;
-				fprintf(fptr, "%13s%8s%8s%14s%11s%s\n", records[i]);
-			}
-		}
-		fprintf(fptr, "\n", NULL);
-		fclose(fptr);
-		
-		// close all the ends
-		close(p2c[0]);
-		close(c2p[1]);
-		exit(0);
-	}
 	*/
 	return 0;
 }
