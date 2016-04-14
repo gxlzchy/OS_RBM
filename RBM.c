@@ -193,8 +193,10 @@ int* inp(int reqno, char input[], int stdat[]){
 	result[0]=-1;
 	const char ckdev[8][15]={ "webcam_720p","webcam_1080p","monitor_50","monitor_75","projector_fhd","projector_xga","screen_100","screen_150" };
 	char *ret;
+	char stry[80];
+	strcpy(stry,input);
 
-	splited = split(input," ");  
+	splited = split(stry," "); 
 	/*
 	split the input by space, return as a 2D array, 
 	0:request 
@@ -207,18 +209,21 @@ int* inp(int reqno, char input[], int stdat[]){
 	7:2nd device (ddd)
 	*/
 	
-	switch (input[0]){	/*for the case add booking command is entered*/
+	switch (stry[0]){	/*for the case add booking command is entered*/
 		case 'a':	// "add<sth>"
 			result[0]=reqno;
-			printf("a request of booking is received\n");
+
 			switch (splited[0][3]){
 				case 'M':	// "addMeeting"
 				case 'm':
 					result = realloc(result, 5 * sizeof(int));
 					result[3]=1;
+					printf("%s\n",splited[1]);
+					printf("%c\n",splited[1][6]);
 					switch(splited[1][6]){
 						case 'A':	// "room_A"
 							result[4] = 1;
+							printf("%s\n","abc");
 							break;
 						case 'B':	// "room_B"
 							result[4] = 2;
@@ -243,7 +248,7 @@ int* inp(int reqno, char input[], int stdat[]){
 					}
 					for(i=0;i<8;i++){
 						ret = strstr(splited[6],ckdev[i]);
-						if (ret){
+						if (ret!=NULL){
 							result[5] = i+2;
 							break;
 						}
@@ -251,7 +256,7 @@ int* inp(int reqno, char input[], int stdat[]){
 					}
 					for(i=0;i<8;i++){
 						ret = strstr(splited[7],ckdev[i]);
-						if (ret){
+						if (ret!=NULL){
 							result[6] = i+2;
 							break;
 						}
@@ -359,8 +364,6 @@ char **split(char str[],const char s[])
 	char ** res  = NULL;
 	char *  p    = strtok (str, s);
 	int n_spaces = 0, i;
-	
-	/* split string and append tokens to 'res' */
 	while (p)
 	{
 		res = realloc (res, sizeof (char*) * ++n_spaces);
@@ -479,18 +482,22 @@ int main(){
 	int* inp();			// initialize the function input and split
 	char **split();    
 	char all[N][80], **str;	//an array for saving all command for convenience for output
-	char input[80];
+	char input[80],stry[80];;
 	printf("~~ WELCOME TO PolySME ~~\n");
 	
+	request=malloc(sizeof(int));
+	request[0]=1;
 	while(request[0]>0){
 		printf("Please enter booking:\n");
 		fgets(input,80,stdin);
-		
-		printf("-> [Pending]\n");
+		size_t len = strlen(input);
+		if (len > 0 && input[len-1] == '\n')
+			input[--len] = '\0';
+		strcpy(stry,input);
 		
 		/* set the start date for the system */
 		if (reqno == 1){	//if this is the first command, take this book's date as the start time of the whole booking period
-			str = split(input," ");
+			str = split(stry," ");
 			str = split(str[2],"-");
 			for(i=0;i<3;i++)
 			stdat[i] = atoi(str[i]);
@@ -539,7 +546,6 @@ int main(){
 			
 			
 		}
-
 	}
 	
 	// ###################################################
@@ -604,105 +610,5 @@ int main(){
 	int **reqStatus=greedy(reqNum,11,st,ed,fNum);
 	for (i=0;i<11;i++)
 		printf("request #%d %s\n", reqStatus[i][0],reqStatus[i][1]==1?"accept":"reject");
-	
-	// ###################################################
-	// ################## Output Module ##################
-	// ###################################################
-	
-	char title1[] = "***Room Booking ¨C ACCEPTED***";
-	char title2[] = "***Room Booking - REJECTED***";
-	char title3[] = "Performance:";
-	
-	// output files - FCFS_Schd.dat/PRIO_Schd.dat/OPTI_Schd.dat
-	char filename[15] = "fcfs";
-	//char filename[15] = "prio";
-	//char filename[15] = "opti";
-	strcat(filename, "_Schd.dat");
-	
-	// open and overwrite the corresponding output file
-	FILE *fptr;
-	fptr = fopen(filename, "w");
-	fprintf(fptr, "%s\n\n", title1);
-	fclose(fptr);
-	
-	// create the two necessary pipes - p2c and c2p
-	int p2c[2], c2p[2];
-	if (pipe(p2c) < 0)
-	{
-		printf("Pipe creation error\n");
-		exit(1);
-	}
-	if (pipe(c2p) < 0)
-	{
-		printf("Pipe creation error\n");
-		exit(1);
-	}
-	
-	// fork() 13 children - 10 facilities and 3 tenants
-	int id = -1;
-	for (i = 0; i < 13; i++)
-		if ((childpid = fork()) <= 0)
-		{
-			id = i;
-			break;
-		}
-	// fprintf(stderr, "This is process %ld with parent %ld\n", (long)getpid(), (long)getppid());
-	// printf("childpid: %d\n", childpid);
-	
-	if (childpid == -1)		// creation error //
-		printf("Child process creation error!\n");
-	else if (childpid > 0)	// parent execution //
-	{
-		// close the excessive ends
-		close(p2c[0]);
-		close(c2p[1]);
-		
-		// distribute the related booking records to children
-		char records_in_char[10];
-		int records;
-		// printf("Child: my id - %d size - %d\n", buffer, sizeof(buffer));
-		sprintf(records_in_char, "%d", records);
-		write(c2p[1], records_in_char, 10);
-		
-		// wait for child
-		wait(NULL);
-		
-		// close all the ends
-		close(p2c[1]);
-		close(c2p[0]);
-		exit(0);
-	}
-	else	// child execution //
-	{
-		// close the excessive ends
-		close(p2c[1]);
-		close(c2p[0]);
-		
-		// open and append to the corresponding output file
-		fptr = fopen(filename, "a");
-		fprintf(fptr, "%shas the following bookings:\n\n", id2component(id));
-		fprintf(fptr, "Date         Start   End     Type          Requester  Device\n", NULL);
-		fprintf(fptr, "===========================================================================\n", NULL);
-		
-		// receive and output the related booking records
-		long records[N][10];
-		int n;
-		for (i = 0; i < N; i++)
-		{
-			while ((n = read(c2p[0], records[i], 10)) > 0)
-			{
-				records[i][n] = 0;
-				fprintf(fptr, "%13s%8s%8s%14s%11s%s\n", records[i]);
-			}
-		}
-		printf("\n");
-		fclose(fptr);
-		
-		// close all the ends
-		close(p2c[0]);
-		close(c2p[1]);
-		exit(0);
-	}
-	
 	return 0;
 }
