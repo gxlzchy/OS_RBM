@@ -519,13 +519,7 @@ char* id2component(int id)
 
 /* main program */
 int main(){
-<<<<<<< HEAD
-	// 1. input module - input lines in cmd and lines in .dat files
-	int reqNum[N],st[N],ed[N],fNum[N][5];
-	int i,reqno = 0,commandno;
-	int stdat[3] , *request;           // stdat an array saving the starting time of the whole booking period(2 weeks)
-	int* input();   	// initialize the function input and split
-=======
+
 	// ##################################################
 	// ################## Input Module ##################
 	// ##################################################
@@ -534,7 +528,6 @@ int main(){
 	int i, reqno = 1, commandno;
 	int stdat[3], *request;	// stdat an array saving the starting time of the whole booking period(2 weeks)
 	int* input();			// initialize the function input and split
->>>>>>> origin/master
 	char **split();    
 	char all[N][80], **str;	//an array for saving all command for convenience for output
 	printf("~~ WELCOME TO PolySME ~~\n");
@@ -666,7 +659,7 @@ int main(){
 	// ################## Output Module ##################
 	// ###################################################
 	
-	char title1[] = "***Room Booking ¨C ACCEPTED***";
+	char title1[] = "***Room Booking Â¨C ACCEPTED***";
 	char title2[] = "***Room Booking - REJECTED***";
 	char title3[] = "Performance:";
 	
