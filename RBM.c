@@ -155,7 +155,6 @@ int** greedy(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5]){
 @param: int reqno	- to let the function know how many request is received now
 		char input	- for storing the line user entered
 		int stdat	- 
-
 variables: int firstword	- to save the place of first word
 		   char *fac		- for saving the facility user entered
 		   char *dat		- for the date 
@@ -172,15 +171,12 @@ variables: int firstword	- to save the place of first word
 	3:total no. of device in this booking,
 	4:dev1 number,
 	5:dev2 number
-<<<<<<< HEAD
 	6:dev3 number (for request addpresent add conference)
 	
-		   
-=======
->>>>>>> origin/master
+
+
 */
-int* input(int reqno, char input[], int stdat[])
-{
+int* inp(int reqno, char input[], int stdat[]){
 	char **split();
 	int datdif();
 	int i,n=5;/* i to store the length of the first word(request)*/
@@ -196,7 +192,8 @@ int* input(int reqno, char input[], int stdat[])
 	int *result=malloc(sizeof(int));
 	result[0]=-1;
 	const char ckdev[8][15]={ "webcam_720p","webcam_1080p","monitor_50","monitor_75","projector_fhd","projector_xga","screen_100","screen_150" };
-	
+	char *ret;
+
 	splited = split(input," ");  
 	/*
 	split the input by space, return as a 2D array, 
@@ -210,19 +207,16 @@ int* input(int reqno, char input[], int stdat[])
 	7:2nd device (ddd)
 	*/
 	
-	switch (input[0])
-	{	/*for the case add booking command is entered*/
+	switch (input[0]){	/*for the case add booking command is entered*/
 		case 'a':	// "add<sth>"
 			result[0]=reqno;
 			printf("a request of booking is received\n");
-			switch (splited[0][3])
-			{
+			switch (splited[0][3]){
 				case 'M':	// "addMeeting"
 				case 'm':
 					result = realloc(result, 5 * sizeof(int));
 					result[3]=1;
-					switch(splited[1][6])
-					{
+					switch(splited[1][6]){
 						case 'A':	// "room_A"
 							result[4] = 1;
 							break;
@@ -230,71 +224,7 @@ int* input(int reqno, char input[], int stdat[])
 							result[4] = 2;
 							break;
 					}
-					
 					break;
-					
-<<<<<<< HEAD
-		        }
-				
-
-    			break;
-		    case 'D':
-		    case 'd':
-				result = realloc(result, 5 * sizeof(int));
-				for(i=0;i<8;i++){
-		            ret = strstr(splited[1],ckdev[i]);
-		            if (ret){
-		                result[4] = i+2;
-		                break;
-		            }
-		        }
-				result[3]=1;
-    			break;
-				
-		    case 'B':
-		    case 'b':
-			/* for reading a file, it return an array combining all request.
-			 result : 0: -2(indicator) 
-			 1:no. of request read 
-			 for any n elements after , store the n elements (append to the array requet by request)
-			 */
-				ofl=1;
-				FILE *fp;
-				char **flname;
-				char *line = NULL;
-				int placeA=2,sizeofarray;
-				size_t len = 0;
-				ssize_t read;
-				result[0] = -2;
-				int *add;
-				result[1] = 0;
-				flname = split(splited[1],"-");
-				result = realloc(result,7*sizeof(int));
-				fp = fopen(flname[0],"r");
-				if (fp == NULL)
-					exit(EXIT_FAILURE);
-				while ((read = getline(&line, &len,fp)) != -1){
-					if (result[1]>=1)
-					result = realloc((sizeofarray+5)*sizeof(int));
-					sizeofarray+=5;
-					add = input(reqno,line,stdat);
-					result[1]++;
-					result[placeA++] = reqno++;
-					result[placeA++] = add[1];
-					result[placeA++] = add[2];
-					result[placeA++] = add[3];
-					result[placeA++] = add[4];
-					if (add[3] == 3){
-						result = realloc((sizeofarray + 2)*sizeof(int));
-						sizeofarray+=2;
-						result[placeA++] = add[5];
-						result[placeA++] = add[6];
-					}
-				}
-			    printf("the request is addBatch\n");
-			    break;
-		    }
-=======
 				case 'p':
 				case 'P':	// "addPresentation"
 				case 'c':
@@ -327,7 +257,6 @@ int* input(int reqno, char input[], int stdat[])
 						}
 						
 					}
-					
 					break;
 				case 'D':	// "addDevice"
 				case 'd':
@@ -344,27 +273,49 @@ int* input(int reqno, char input[], int stdat[])
 					
 				case 'B':	// "addBatch"
 				case 'b':
+				/* for reading a file, it return an array combining all request.
+				result : 0: -2(indicator) 
+				1:no. of request read 
+				for any n elements after , store the n elements (append to the array requet by request)
+				*/
 					ofl=1;
 					FILE *fp;
 					char **flname;
 					char *line = NULL;
+					int placeA=2,sizeofarray;
 					size_t len = 0;
 					ssize_t read;
-					
+					result[0] = -2;
+					int *add;
+					result[1] = 0;
 					flname = split(splited[1],"-");
+					result = realloc(result,7*sizeof(int));
 					fp = fopen(flname[0],"r");
 					if (fp == NULL)
 						exit(EXIT_FAILURE);
 					while ((read = getline(&line, &len,fp)) != -1){
-						result = input(reqno,line,stdat);
+						if (result[1]>=1)
+						result = realloc(result,(sizeofarray+5)*sizeof(int));
+						sizeofarray+=5;
+						add = inp(reqno,line,stdat);
+						result[1]++;
+						result[placeA++] = reqno++;
+						result[placeA++] = add[1];
+						result[placeA++] = add[2];
+						result[placeA++] = add[3];
+						result[placeA++] = add[4];
+						if (add[3] == 3){
+							result = realloc(result,(sizeofarray + 2)*sizeof(int));
+							sizeofarray+=2;
+							result[placeA++] = add[5];
+							result[placeA++] = add[6];
+						}
 					}
 					printf("the request is addBatch\n");
 					break;
 			}
 			
 			break;
->>>>>>> origin/master
-		
 		case 'p':
 			/*call output and calculate*/
 			printf("print out booking\n");
@@ -399,10 +350,8 @@ int* input(int reqno, char input[], int stdat[])
 
 
 /**@param:char str[]: the string to be splited.
-
 	@the funtion takes a string and returns a 2D array which contains the words in the input string splited into the array.
 	
-
 */
 char **split(char str[],const char s[])
 {
@@ -527,9 +476,10 @@ int main(){
 	int reqNum[N], st[N], ed[N], fNum[N][5];	// request id, starting time, ending time, number of facilities
 	int i, reqno = 1, commandno;
 	int stdat[3], *request;	// stdat an array saving the starting time of the whole booking period(2 weeks)
-	int* input();			// initialize the function input and split
+	int* inp();			// initialize the function input and split
 	char **split();    
 	char all[N][80], **str;	//an array for saving all command for convenience for output
+	char input[80];
 	printf("~~ WELCOME TO PolySME ~~\n");
 	
 	while(request[0]>0){
@@ -546,7 +496,7 @@ int main(){
 			stdat[i] = atoi(str[i]);
 		}
 		
-		request = input(input ,reqno, stdat);
+		request = inp(reqno ,input, stdat);
 		if (request[0]>0){
 			strcpy(all[commandno++],input);
 			reqNum[reqno] = request[0];
@@ -554,7 +504,7 @@ int main(){
 			ed[reqno] = request[2];
 			fNum[reqno][0] = request[3];
 			fNum[reqno][1] = request[4];
-			if (result[3] == 3){
+			if (request[3] == 3){
 				fNum[reqno][2] = request[5];
 				fNum[reqno][3] = request[6];
 			}
@@ -578,7 +528,7 @@ int main(){
 				ed[reqno] = request[place++];
 				fNum[reqno][0] = request[place++];
 				fNum[reqno][1] = request[place++];
-				if (result[3] == 3){
+				if (request[3] == 3){
 					fNum[reqno][2] = request[place++];
 					fNum[reqno][3] = request[place++];
 				}
