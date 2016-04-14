@@ -249,7 +249,7 @@ int* inp(int reqno, char input[], int stdat[]){
 					for(i=0;i<8;i++){
 						ret = strstr(splited[6],ckdev[i]);
 						if (ret!=NULL){
-							result[5] = i+2;
+							result[5] = i+3;
 							break;
 						}
 						
@@ -257,7 +257,7 @@ int* inp(int reqno, char input[], int stdat[]){
 					for(i=0;i<8;i++){
 						ret = strstr(splited[7],ckdev[i]);
 						if (ret!=NULL){
-							result[6] = i+2;
+							result[6] = i+3;
 							break;
 						}
 						
@@ -269,7 +269,7 @@ int* inp(int reqno, char input[], int stdat[]){
 					for(i=0;i<8;i++){
 						ret = strstr(splited[1],ckdev[i]);
 						if (ret){
-							result[4] = i+2;
+							result[4] = i+3;
 							break;
 						}
 					}
