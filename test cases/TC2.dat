@@ -1,0 +1,4 @@
+addmeeting -room_B 2016-04-06 10:00 3.0 tenant_A;
+addPresentation -room_B 2016-04-06 10:00 3.0 tenant_B projector_fhd screen_100;
+addDevice –projector_fhd 2016-04-06 10:00 3.0 tenant_A;
+addDevice –screen_100 2016-04-06 10:00 3.0 tenant_A;

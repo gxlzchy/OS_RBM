@@ -1,0 +1,2 @@
+addPresentation -room_B 2016-04-07 09:00 6.0 tenant_B projector_fhd screen_100;
+addDevice -projector_xga 2016-04-07 12:00 1.0 tenant_A;

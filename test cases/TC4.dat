@@ -1,0 +1,5 @@
+addMeeting –room_A 2016-04-05 16:00 2.0 tenant_A;
+addDevice –projector_xga 2016-04-07 16:00 2.0 tenant_B;
+addDevice –screen_100 2016-04-07 16:00 2.0 tenant_B;
+addDevice –webcam_720p 2016-04-07 16:00 2.0 tenant_C;
+addDevice –monitor_75 2016-04-07 16:00 2.0 tenant_C;

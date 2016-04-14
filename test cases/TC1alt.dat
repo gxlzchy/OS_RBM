@@ -1,0 +1,2 @@
+addMeeting -room_A 2016-04-05 11:00 4.0 tenant_B;
+addMeeting -room_A 2016-04-05 09:00 3.0 tenant_A;

@@ -1,0 +1,11 @@
+addConference –room_B 2016-04-05 10:00 5.0 tenant_A webcam_720p monitor_50;
+addDevice -webcam_720p 2016-04-05 11:00 3.0 tenant_A;
+addDevice -webcam_720p 2016-04-05 12:00 1.0 tenant_A;
+addDevice -webcam_720p 2016-04-05 12:00 2.0 tenant_A;
+addDevice -webcam_720p 2016-04-05 14:00 1.0 tenant_A;
+addMeeting –room_B 2016-04-05 12:00 3.0 tenant_A;
+addMeeting –room_B 2016-04-05 09:00 4.0 tenant_A;
+addMeeting –room_B 2016-04-05 10:00 2.0 tenant_A;
+addDevice -webcam_1080p 2016-04-05 11:00 3.0 tenant_A;
+addDevice -webcam_1080p 2016-04-05 14:00 1.0 tenant_A;
+addDevice -webcam_720p 2016-04-05 10:00 1.0 tenant_A;
