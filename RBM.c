@@ -262,6 +262,7 @@ int* inp(int reqno, char input[], int stdat[]){
 
 			switch (splited[0][3]){
 				case 'M':	// "addMeeting"
+				case 'm':
 					result = realloc(result, 5 * sizeof(int));
 					result[3]=1;
 					printf("%s\n",splited[1]);
@@ -276,10 +277,10 @@ int* inp(int reqno, char input[], int stdat[]){
 							break;
 					}
 					break;
-				case 'm':
 				case 'P':	// "addPresentation"
 				case 'p':
 				case 'C':	// "addConference"
+				case 'c':
 					n=7;
 					result = realloc(result, 7 * sizeof(int));
 					result[3]=3;
@@ -309,8 +310,8 @@ int* inp(int reqno, char input[], int stdat[]){
 						
 					}
 					break;
-				case 'c':
 				case 'D':	// "addDevice"
+				case 'd':
 					result = realloc(result, 5 * sizeof(int));
 					for(i=0;i<8;i++){
 						ret = strstr(splited[1],ckdev[i]);
@@ -322,7 +323,7 @@ int* inp(int reqno, char input[], int stdat[]){
 					result[3]=1;
 					break;
 					
-				case 'd':
+				
 				case 'b':
 				case 'B':	// "addBatch"
 				/* for reading a file, it return an array combining all request.
@@ -333,12 +334,12 @@ int* inp(int reqno, char input[], int stdat[]){
 					ofl=1;
 					FILE *fp;
 					char **flname;
-					char *line = NULL;
+					char *line = NULL,*stry;
 					int placeA=2,sizeofarray;
 					size_t len = 0;
 					ssize_t read;
 					result[0] = -2;
-					int *add;
+					int *add,stdat[3];
 					result[1] = 0;
 					flname = split(splited[1],"-");
 					result = realloc(result,7*sizeof(int));
@@ -349,6 +350,7 @@ int* inp(int reqno, char input[], int stdat[]){
 						if (result[1]>=1)
 						result = realloc(result,(sizeofarray+5)*sizeof(int));
 						sizeofarray+=5;
+
 						add = inp(reqno,line,stdat);
 						result[1]++;
 						result[placeA++] = reqno++;
@@ -399,6 +401,29 @@ int* inp(int reqno, char input[], int stdat[]){
 	return result;
 }
 
+/** 
+@brief        the function get the date of the first command in a batch file
+@param        fil    the file name which is going to be read
+
+@return       am int array contain 3 integer which is the start date
+*/
+int *getstdat(char fil[]){
+					FILE *fp;
+					char *line = NULL,*stry;
+					size_t len = 0;
+					ssize_t read;
+					int *add,stdat[3];
+					fp = fopen(fil,"r");
+					if (fp == NULL)
+						exit(EXIT_FAILURE);
+					read = getline(&line, &len,fp)) != -1);
+					stry = split(line," ");
+			        str = split(stry[2],"-");
+			        for(i=0;i<3;i++)
+						stdat[i] = atoi(str[i]);
+				return stdat;
+					
+}
 
 /**
  * @brief      the funtion takes a string and returns a 2D array which contains the words in the input string splited into the array.
@@ -832,11 +857,14 @@ int main(){
 		strcpy(stry,input);
 		
 		// set the start date for the system
-		if (reqno == 1){	//if this is the first command, take this book's date as the start time of the whole booking period
+		if (reqno == 1 && strcmp(input[3],'B') != 0){	//if this is the first command, take this book's date as the start time of the whole booking period
 			str = split(stry," ");
 			str = split(str[2],"-");
 			for(i=0;i<3;i++)
 			stdat[i] = atoi(str[i]);
+		}
+		else if (reqno == 1 && strcmp(input[3],'B') == 0){
+			stdat=getstdat(stry);
 		}
 		
 		request = inp(reqno, input, stdat);
