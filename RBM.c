@@ -197,30 +197,33 @@ int** reschedule(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5], i
 }
 
 
-/** function input
-@param: int reqno	- to let the function know how many request is received now
-		char input	- for storing the line user entered
-		int stdat	- 
-variables: int firstword	- to save the place of first word
-		   char *fac		- for saving the facility user entered
-		   char *dat		- for the date 
-		   char *time		- for the time
-		   char *dur		- for the duration
-		   char *caller		- for the caller
-	@the function reads a line of input and detects which request has been entered
-	@This function returns an array for saving input from user, if end program command is received, it will return
-	an array size one and value is -1, and if a print booking request is received, an array of size 1 and value 0 is returned.
-	place of array:
-	0:requestNumber,
-	1:starttime,
-	2:endtime,
-	3:total no. of device in this booking,
-	4:dev1 number,
-	5:dev2 number
-	6:dev3 number (for request addpresent add conference)
-	
-*/
+/**
+ * @brief      the function reads a line of input and detects which request has been entered
+ *
+ * @param[in]  reqno  to let the function know how many request is received now
+ * @param      input  for storing the line user entered
+ * @param      stdat  { parameter_description }
+ *
+ * @return     an array for saving input from user, if end program command is received, it will return
+ *				an array size one and value is -1, and if a print booking request is received, an array of size 1 and value 0 is returned.
+ *				place of array:
+ *				0:requestNumber,
+ *				1:starttime,
+ *				2:endtime,
+ *				3:total no. of device in this booking,
+ *				4:dev1 number,
+ *				5:dev2 number
+ *				6:dev3 number (for request addpresent add conference)
+ */
 int* inp(int reqno, char input[], int stdat[]){
+	/**
+	 * param[int] firstword to save the place of first word
+	 * param[char*] fac for saving the facility user entered
+	 * param[char*] dat for the date
+	 * param[char*] time for the time
+	 * param[char*] dur for the duration
+	 * param[char*] caller for the caller
+	 */
 	char **split();
 	int datdif();
 	int i,n=5;/* i to store the length of the first word(request)*/
@@ -397,11 +400,14 @@ int* inp(int reqno, char input[], int stdat[]){
 }
 
 
-
-/**@param:char str[]: the string to be splited.
-	@the funtion takes a string and returns a 2D array which contains the words in the input string splited into the array.
-	
-*/
+/**
+ * @brief      the funtion takes a string and returns a 2D array which contains the words in the input string splited into the array.
+ *
+ * @param      str   the string to be splited.
+ * @param[in]  s     the split character
+ *
+ * @return     { description_of_the_return_value }
+ */
 char **split(char str[],const char s[])
 {
 	
@@ -426,12 +432,14 @@ char **split(char str[],const char s[])
 }
 
 
-
-/**@param: int stdat[]	: starting date for the counting
-           int dat[]	: ending date of the counting
-   @ this function calculates the days difference of from start date to the end day and then returns it
-	
-*/
+/**
+ * @brief      this function calculates the days difference of from start date to the end day and then returns it
+ *
+ * @param      stdat  starting date for the counting
+ * @param      dat    ending date of the counting
+ *
+ * @return     The difference from start date to the end day
+ */
 int datdif(int stdat[], int dat[])
 {
 	int diff;
@@ -474,23 +482,25 @@ int datdif(int stdat[], int dat[])
 	return diff;
 }
 
-
-
-/* this function converts an id --> a component name
-1 -- room_A
-2 -- room_B
-3 -- webcam_720p
-4 -- webcam_1080p
-5 -- monitor_50
-6 -- monitor_75
-7 -- projector_fhd
-8 -- projector_xga
-9 -- screen_100
-10 -- screen_150
-11 -- tenant_A
-12 -- tenant_B
-13 -- tenant_C
-*/
+/**
+ * @brief      This function converts an id to a component's name
+ *
+ * @param[in]  id   1 -- room_A
+ *					2 -- room_B
+ *					3 -- webcam_720p
+ *					4 -- webcam_1080p
+ *					5 -- monitor_50
+ *					6 -- monitor_75
+ *					7 -- projector_fhd
+ *					8 -- projector_xga
+ *					9 -- screen_100
+ *					10 -- screen_150
+ *					11 -- tenant_A
+ *					12 -- tenant_B
+ *					13 -- tenant_C
+ *
+ * @return     { description_of_the_return_value }
+ */
 char* id2component(int id)
 {
 	switch (id)
@@ -513,7 +523,22 @@ char* id2component(int id)
 
 
 
-/* this function forks child processes to output the schedules to _Schd.dat and Summary.dat */
+
+/**
+ * @brief      this function forks child processes to output the schedules to _Schd.dat and Summary.dat
+ *
+ * @param      reqNum           	reqNum[index]=the request number
+ * @param[in]  numOfReq             the number of request needed to be proceeded.
+ * @param      st                   st[reqNum]: the start time of the requests.
+ * @param      ed                   ed[reqNum]: the end time of the requests.
+ *                                  End time is inclusive.
+ * @param      fNum                 fNum[reqNum][0]=The total number facilities
+ *                                  in this request fNum[reqNum][i]=facility
+ *                                  Number.(i=1..3)
+ * @param      reqStatus       		{ parameter_description }
+ * @param[in]  total_accepted  		{ parameter_description }
+ * @param[in]  total_rejected  		{ parameter_description }
+ */
 void output2dat(int reqNum[], int num_requests, int st[], int ed[],int fNum[][5], int **reqStatus, int total_accepted, int total_rejected)
 {
 	// ###################################################
