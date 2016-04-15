@@ -4,6 +4,7 @@
 
 #define N 20    // The maximun acceptable number of request.
 #define M 90    // The maximun duration of all requests is two weeks time: 2*5(per week)*9(9am-6pm)=90.
+
 /*
 Use the following id numbers to represent different components:
 1 -- room_A
@@ -22,10 +23,14 @@ Use the following id numbers to represent different components:
 */
 
 
-
 /**
-    @cmp: compare two variables to prepare for qsort in greedy()
-*/
+ * @brief      compare two variables to prepare for qsort in greedy()
+ *
+ * @param[in]  pa    1st array for comparing
+ * @param[in]  pb    2nd array for comparing
+ *
+ * @return     -1: better, 0: equal, 1: Worse
+ */
 int cmp(const void *pa, const void *pb){
     const int (*a)[3] = pa;
     const int (*b)[3] = pb;
@@ -39,23 +44,21 @@ int cmp(const void *pa, const void *pb){
     }
 }
 
-
-
-/**@param 
-        reqNum:     int[] reqNum[index]=the request number. 
-        numOfReq:   int, the number of request needed to be proceeded by FCFS. 
-        st:         int[]  st[reqNum]: the start time of the requests. 
-        ed:         int[]. ed[reqNum]: the end time of the requests. 
-        End time is inclusive.
-        fNum:       int[][]:
-            fNum[reqNum][0]=The total number facilities in this request
-            fNum[reqNum][i]=facility Number.(i=1..3)
-   @the function takes in array of requests and schedule it with First Come First Serve algorithm
-   @return: returns a 2D array. the second dimension has 2 variables:
-        1st one is the request number
-        2nd one 1:accepted, 0:rejected.
-   The first dimension is just for indexing different requests
-*/
+/**
+ * @brief      the function takes in array of requests and schedule it with First Come First Serve algorithm.
+ *
+ * @param      reqNum    reqNum[index]=the request number
+ * @param[in]  numOfReq  the number of request needed to be proceeded by FCFS.
+ * @param      st        st[reqNum]: the start time of the requests.
+ * @param      ed        ed[reqNum]: the end time of the requests.
+ * 						 End time is inclusive.
+ * @param      fNum      fNum[reqNum][0]=The total number facilities in this request
+ *          			 fNum[reqNum][i]=facility Number.(i=1..3)
+ *
+ * @return     returns a 2D array. the second dimension has 2 variables:
+ *      			1st one is the request number
+ *     				2nd one 1:accepted, 0:rejected.
+ */
 int** FCFS(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5]){
     int i,j,k;
 
@@ -103,21 +106,21 @@ int** FCFS(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5]){
 }
 
 
-
-/**@param 
-        reqNum: int[] reqNum[index]=the request number. 
-        numOfReq: int, the number of request needed to be proceeded by FCFS. 
-        st: int[]  st[reqNum]: the start time of the requests. 
-        ed: int[]. ed[reqNum]: the end time of the requests. 
-        End time is inclusive.
-        fNum: int[][]:
-            fNum[reqNum][0]=The total number facilities in this request
-            fNum[reqNum][i]=facility Number.(i=1..3)
-   @the function takes in array of requests and schedule it with greedy algorithm
-   @return: returns a 2D array. the second dimension has 2 variables, first one is the request number
-   second one 1:accepted, 0:rejected.
-   The first dimension is just for indexing different requests
-*/
+/**
+ * @brief      the function takes in array of requests and schedule it with greedy algorithm
+ *
+ * @param      reqNum    reqNum[index]=the request number
+ * @param[in]  numOfReq  the number of request needed to be proceeded by greedy
+ * @param      st        st[reqNum]: the start time of the requests.
+ * @param      ed        ed[reqNum]: the end time of the requests.
+ * 						 End time is inclusive.
+ * @param      fNum      fNum[reqNum][0]=The total number facilities in this request
+ *          			 fNum[reqNum][i]=facility Number.(i=1..3)
+ *
+ * @return     @return     returns a 2D array. the second dimension has 2 variables:
+ *      			1st one is the request number
+ *     				2nd one 1:accepted, 0:rejected.
+ */
 int** greedy(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5]){
     int i,j,k;
     
@@ -149,8 +152,53 @@ int** greedy(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5]){
     return FCFS(a, numOfReq, b, c, fNum);
 }
 
+/**
+ * @brief      reschedule the rejected requests
+ *
+ * @param      reqNum               reqNum[index]=the request number
+ * @param[in]  numOfReq             the number of request needed to be proceeded
+ *                                  by greedy
+ * @param      st                   st[reqNum]: the start time of the requests.
+ * @param      ed                   ed[reqNum]: the end time of the requests.
+ *                                  End time is inclusive.
+ * @param      fNum                 fNum[reqNum][0]=The total number facilities
+ *                                  in this request fNum[reqNum][i]=facility
+ *                                  Number.(i=1..3)
+ * @param[in]  rescheduleStartTime  a time point from which on, the requests will assigned a new time after this time. 
+ *
+ * @return     { description_of_the_return_value }
+ * @return     returns a 2D array. the second dimension has 2 variables: 1st one
+ *             is the request number 2nd one start time of the request.
+ * @warning    The start time of request may go beyond the convention: two weeks time. M may exceed the boundary.
+ */
+int** reschedule(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5], int rescheduleStartTime){
+    int i,j,k;
+    
+    //define an array
+    int **reqStatus = (int**)malloc(N*sizeof(int*));
+    for(i=0;i<N;i++)
+        reqStatus[i] = (int*)malloc(2*sizeof(int));
+    
+    //initialization
+    for (i=0;i<numOfReq;i++){
+        reqStatus[i][0]=reqNum[i];
+        reqStatus[i][1]=ed[reqNum[i]]-st[reqNum[i]]+1;	//duration temp.
+    }
 
-/* main program */
+    //core
+    int x=rescheduleStartTime;
+    for (i=0;i<numOfReq;i++){
+    	int duration=reqStatus[i][1];
+    	reqStatus[i][1]=x;
+    	x+=duration;
+    }
+
+    return reqStatus;
+}
+
+/**
+ * @brief      Main Program
+ */
 int main(){
     int reqNum[N], st[N], ed[N], fNum[N][5];    // request id, starting time, ending time, number of facilities
     int i, j, k;
@@ -215,16 +263,9 @@ int main(){
     
     int num_requests = 11;
     
-    int **reqStatus=greedy(reqNum,num_requests,st,ed,fNum);
-    int total_accepted = 0;
-    int total_rejected = 0;
+    int **reqStatus=reschedule(reqNum,num_requests,st,ed,fNum,0);
     for (i=0;i<11;i++)
-    {
-        if (reqStatus[i][1] == 1)
-            total_accepted++;
-        else
-            total_rejected++;
-        printf("request #%d %s\n", reqStatus[i][0], reqStatus[i][1]==1?"accept":"reject");
-    }
+        printf("request #%d %d\n", reqStatus[i][0], reqStatus[i][1]);
+    
     return 0;
 }
