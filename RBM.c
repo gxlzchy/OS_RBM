@@ -412,7 +412,7 @@ int *getstdat(char fil[]){
 					char *line = NULL,*stry;
 					size_t len = 0;
 					ssize_t read;
-					int *add,stdat[3];
+					int stdat[3];
 					fp = fopen(fil,"r");
 					if (fp == NULL)
 						exit(EXIT_FAILURE);
