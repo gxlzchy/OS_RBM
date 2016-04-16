@@ -864,13 +864,14 @@ int main(){
 	int* inp();			// initialize the function input and split
 	char **split();    
 	char all[N][80], **str;	//an array for saving all command for convenience for output
-	char input[80],stry[80];;
+	char stry[80];;
 	printf("~~ WELCOME TO PolySME ~~\n");
 	
 	request=malloc(sizeof(int));
 	request[0]=1;
 	while(request[0]>0){
 		printf("Please enter booking:\n");
+		char input[80];
 		fgets(input,80,stdin);
 printf("%c\n",input[3]);		
 size_t len = strlen(input);
