@@ -872,20 +872,29 @@ int main(){
 	while(request[0]>0){
 		printf("Please enter booking:\n");
 		fgets(input,80,stdin);
-		size_t len = strlen(input);
+printf("%c\n",input[3]);		
+size_t len = strlen(input);
 		if (len > 0 && input[len-1] == '\n')
 			input[--len] = '\0';
 		strcpy(stry,input);
 		
 		// set the start date for the system
-		if (reqno == 1){	//if this is the first command, take this book's date as the start time of the whole booking period
-			str = split(stry," ");
+		if (reqno == 1 && input[3]!='B'){	//if this is the first command, take this book's date as the start time of the whole booking period
+stdat = malloc(3*sizeof(int));			
+str = split(stry," ");
 			str = split(str[2],"-");
 			for(i=0;i<3;i++)
 			stdat[i] = atoi(str[i]);
 		}
-		
+		else if (reqno == 1 && input[3]=='B'){
+printf("start getstdat functino\n");
+			stdat=getstdat(stry);
+		}
+printf("the start date has been set %d %d %d\n",stdat[0],stdat[1],stdat[2]);		
 		request = inp(reqno, input, stdat);
+printf("%d %d %d %d %d\n",reqNum[reqno-1],st[reqno-1],ed[reqno-1],fNum[reqno-1][0],fNum[reqno-1][1]);
+printf("\n");
+
 		if (request[0]>0){
 			strcpy(all[commandno++],input);
 			reqNum[reqno] = request[0];
@@ -951,10 +960,11 @@ int main(){
 				reqno++;
 				commandno++;
 			}
-			request[0] =0;
 			
 			
 		}
+printf("%d %d %d %d %d\n",reqNum[reqno-1],st[reqno-1],ed[reqno-1],fNum[reqno-1][0],fNum[reqno-1][1]);
+printf("\n");
 	}
 	/*
 	// ###################################################
