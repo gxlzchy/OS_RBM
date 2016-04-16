@@ -12,7 +12,7 @@ addDevice -screen_100 2016-04-02 09:00 3.0 tenant_A;
 addDevice -monitor_50 2016-04-03 12:00 1.0 tenant_A;
 addConference -room_B 2016-04-03 11:00 2.0 tenant_B webcam_720p monitor_50;
 addDevice -webcam_720p 2016-04-03 12:00 1.0 tenant_A;
-addMeeting -room_B 2016-04-03 2016-04-07 12:00 1.0 tenant_A;
+addMeeting -room_B 2016-04-03 12:00 1.0 tenant_A;
 addMeeting -room_A 2016-04-04 09:00 3.0 tenant_A;
 addMeeting -room_A 2016-04-04 12:00 5.0 tenant_A;
 addMeeting -room_A 2016-04-04 13:00 3.0 tenant_B;
