@@ -261,13 +261,12 @@ int* inp(int reqno, char input[], int stdat[]){
 	switch (stry[0]){	/*for the case add booking command is entered*/
 		case 'a':	// "add<sth>"
 			result[0]=reqno;
-
+printf("second switch");
 			switch (splited[0][3]){
 				case 'M':	// "addMeeting"
+				case 'm':
 					result = realloc(result, 5 * sizeof(int));
 					result[3]=1;
-					printf("%s\n",splited[1]);
-					printf("%c\n",splited[1][6]);
 					switch(splited[1][6]){
 						case 'A':	// "room_A"
 							result[4] = 1;
@@ -278,10 +277,10 @@ int* inp(int reqno, char input[], int stdat[]){
 							break;
 					}
 					break;
-				case 'm':
 				case 'P':	// "addPresentation"
 				case 'p':
 				case 'C':	// "addConference"
+				case 'c':
 					n=7;
 					result = realloc(result, 7 * sizeof(int));
 					result[3]=3;
@@ -311,8 +310,8 @@ int* inp(int reqno, char input[], int stdat[]){
 						
 					}
 					break;
-				case 'c':
 				case 'D':	// "addDevice"
+				case 'd':
 					result = realloc(result, 5 * sizeof(int));
 					for(i=0;i<8;i++){
 						ret = strstr(splited[1],ckdev[i]);
@@ -324,7 +323,7 @@ int* inp(int reqno, char input[], int stdat[]){
 					result[3]=1;
 					break;
 					
-				case 'd':
+				
 				case 'b':
 				case 'B':	// "addBatch"
 				/* for reading a file, it return an array combining all request.
@@ -335,12 +334,12 @@ int* inp(int reqno, char input[], int stdat[]){
 					ofl=1;
 					FILE *fp;
 					char **flname;
-					char *line = NULL;
+					char *line = NULL,*stry;
 					int placeA=2,sizeofarray;
 					size_t len = 0;
 					ssize_t read;
 					result[0] = -2;
-					int *add;
+					int *add,stdat[3];
 					result[1] = 0;
 					flname = split(splited[1],"-");
 					result = realloc(result,7*sizeof(int));
@@ -351,7 +350,9 @@ int* inp(int reqno, char input[], int stdat[]){
 						if (result[1]>=1)
 						result = realloc(result,(sizeofarray+5)*sizeof(int));
 						sizeofarray+=5;
+printf("first hi");
 						add = inp(reqno,line,stdat);
+printf("hi");
 						result[1]++;
 						result[placeA++] = reqno++;
 						result[placeA++] = add[1];
@@ -387,6 +388,7 @@ int* inp(int reqno, char input[], int stdat[]){
 		dat = split(splited[2],"-");
 		for (i=0;i<3;i++)
 			date[i] = atoi(dat[i]);
+printf("%d %d %d \n",date[0],date[1],date[2]);
 		ti = split(splited[3],":");
 		tim = atoi(ti[0]) - 9;
 		ddif = datdif(stdat, date);
@@ -394,13 +396,52 @@ int* inp(int reqno, char input[], int stdat[]){
 		du = split(splited[4],".");
 		dur = atoi(du[0]);
 		result[2] = result[1] + dur -1;
+printf("%d %d %d\n",ddif, tim, dur);
 		//
 	
 	}
-	
+	printf("%d %d %d %d %d\n",result[0],result[1],result[2],result[3],result[4]);
 	return result;
 }
 
+/** 
+@brief        the function get the date of the first command in a batch file
+@param        fil    the file name which is going to be read
+
+@return       am int array contain 3 integer which is the start date
+*/
+int *getstdat(char fil[]){
+					FILE *fp;
+					char *line = NULL,**stry,str[80],*strin,**finame,*filen,**a;
+					int i;
+					char **split();
+					size_t len = 0;
+					ssize_t read;
+					int stda[3];
+strcpy(str,fil);
+printf("copied\n");
+finame = split(str," ");
+
+
+finame = split(finame[1],"-");
+printf("ok!%s\n",finame[0]);
+					fp = fopen(finame[0],"r");
+printf("opended file\n");
+					if (fp == NULL)
+						exit(EXIT_FAILURE);
+read = getline(&line, &len,fp);
+printf("readed a line\n");
+printf("%s\n",line);
+printf("copied!!!!!!!!!\n");
+stry = split(line," ");
+			        a = split(stry[2],"-");
+			        for(i=0;i<3;i++)
+						stda[i] = atoi(a[i]);
+free(line);
+fclose(fp);
+				return stda;
+					
+}
 
 /**
  * @brief      the funtion takes a string and returns a 2D array which contains the words in the input string splited into the array.
@@ -447,7 +488,9 @@ int datdif(int stdat[], int dat[])
 	int diff;
 	int day = dat[2],year = dat[0] ,month = dat[1];
 	int stday = stdat[2],styear = stdat[0] ,stmonth = stdat[1];
-	int *request;
+printf("day = %d\n",day);
+printf("stday = %d\n",stday);
+
 	if (month > stmonth){  /*if the period is across two months*/
 		if ((stmonth == 4) || (stmonth == 6) || (stmonth == 9) || (stmonth == 11)){
 			day += 30;
@@ -483,6 +526,7 @@ int datdif(int stdat[], int dat[])
 	diff = day - stday;
 	return diff;
 }
+
 
 /**
  * @brief      This function converts an id to a component's name
