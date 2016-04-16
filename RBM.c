@@ -217,7 +217,7 @@ int** reschedule(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5], i
  *				5:dev2 number
  *				6:dev3 number (for request addpresent add conference)
  */
-int* inp(int reqno, char input[], int stdat[]){
+int* inp(int reqno, char input[], int *stdat){
 	/**
 	 * param[int] firstword to save the place of first word
 	 * param[char*] fac for saving the facility user entered
@@ -257,6 +257,7 @@ int* inp(int reqno, char input[], int stdat[]){
 	6:1st device (ccc)
 	7:2nd device (ddd)
 	*/
+printf("the start date passedinto this inp fuction is: %d %d %d \n",stdat[0],stdat[1],stdat[2]);
 	
 	switch (stry[0]){	/*for the case add booking command is entered*/
 		case 'a':	// "add<sth>"
@@ -339,7 +340,7 @@ printf("second switch");
 					size_t len = 0;
 					ssize_t read;
 					result[0] = -2;
-					int *add,stdat[3];
+					int *add;
 					result[1] = 0;
 					flname = split(splited[1],"-");
 					result = realloc(result,7*sizeof(int));
@@ -860,7 +861,7 @@ int main(){
 	// ***output module: for each request, i also need a variable named "type" (i.e. meeting/presentation/conference/device)
 	int reqNum[N], st[N], ed[N], fNum[N][5];	// request id, starting time, ending time, number of facilities
 	int i, j, k, reqno = 1, commandno;
-	int stdat[3], *request;	// stdat an array saving the starting time of the whole booking period(2 weeks)
+	int *stdat, *request;	// stdat an array saving the starting time of the whole booking period(2 weeks)
 	int* inp();			// initialize the function input and split
 	char **split();    
 	char all[N][80], **str;	//an array for saving all command for convenience for output
@@ -881,7 +882,7 @@ size_t len = strlen(input);
 		
 		// set the start date for the system
 		if (reqno == 1 && input[3]!='B'){	//if this is the first command, take this book's date as the start time of the whole booking period
-stdat = malloc(3*sizeof(int));			
+stdat = malloc(4*sizeof(int));
 str = split(stry," ");
 			str = split(str[2],"-");
 			for(i=0;i<3;i++)
