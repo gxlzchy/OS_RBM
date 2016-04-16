@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 #define N 20    // The maximun acceptable number of request.
 #define M 90    // The maximun duration of all requests is two weeks time: 2*5(per week)*9(9am-6pm)=90.
@@ -262,7 +264,6 @@ int* inp(int reqno, char input[], int stdat[]){
 
 			switch (splited[0][3]){
 				case 'M':	// "addMeeting"
-				case 'm':
 					result = realloc(result, 5 * sizeof(int));
 					result[3]=1;
 					printf("%s\n",splited[1]);
@@ -277,10 +278,10 @@ int* inp(int reqno, char input[], int stdat[]){
 							break;
 					}
 					break;
+				case 'm':
 				case 'P':	// "addPresentation"
 				case 'p':
 				case 'C':	// "addConference"
-				case 'c':
 					n=7;
 					result = realloc(result, 7 * sizeof(int));
 					result[3]=3;
@@ -310,8 +311,8 @@ int* inp(int reqno, char input[], int stdat[]){
 						
 					}
 					break;
+				case 'c':
 				case 'D':	// "addDevice"
-				case 'd':
 					result = realloc(result, 5 * sizeof(int));
 					for(i=0;i<8;i++){
 						ret = strstr(splited[1],ckdev[i]);
@@ -323,7 +324,7 @@ int* inp(int reqno, char input[], int stdat[]){
 					result[3]=1;
 					break;
 					
-				
+				case 'd':
 				case 'b':
 				case 'B':	// "addBatch"
 				/* for reading a file, it return an array combining all request.
@@ -334,12 +335,12 @@ int* inp(int reqno, char input[], int stdat[]){
 					ofl=1;
 					FILE *fp;
 					char **flname;
-					char *line = NULL,*stry;
+					char *line = NULL;
 					int placeA=2,sizeofarray;
 					size_t len = 0;
 					ssize_t read;
 					result[0] = -2;
-					int *add,stdat[3];
+					int *add;
 					result[1] = 0;
 					flname = split(splited[1],"-");
 					result = realloc(result,7*sizeof(int));
@@ -350,7 +351,6 @@ int* inp(int reqno, char input[], int stdat[]){
 						if (result[1]>=1)
 						result = realloc(result,(sizeofarray+5)*sizeof(int));
 						sizeofarray+=5;
-
 						add = inp(reqno,line,stdat);
 						result[1]++;
 						result[placeA++] = reqno++;
@@ -401,29 +401,6 @@ int* inp(int reqno, char input[], int stdat[]){
 	return result;
 }
 
-/** 
-@brief        the function get the date of the first command in a batch file
-@param        fil    the file name which is going to be read
-
-@return       am int array contain 3 integer which is the start date
-*/
-int *getstdat(char fil[]){
-					FILE *fp;
-					char *line = NULL,*stry;
-					size_t len = 0;
-					ssize_t read;
-					int stdat[3];
-					fp = fopen(fil,"r");
-					if (fp == NULL)
-						exit(EXIT_FAILURE);
-					read = getline(&line, &len,fp)) != -1);
-					stry = split(line," ");
-			        str = split(stry[2],"-");
-			        for(i=0;i<3;i++)
-						stdat[i] = atoi(str[i]);
-				return stdat;
-					
-}
 
 /**
  * @brief      the funtion takes a string and returns a 2D array which contains the words in the input string splited into the array.
@@ -815,13 +792,13 @@ void output2dat(int reqNum[], int num_requests, int st[], int ed[],int fNum[][5]
 	
 	int total = total_accepted + total_rejected;
 	fprintf(fptr, "Total Number of Bookings Received: [%3d]\n", total);
-	fprintf(fptr, "      Number of Bookings Assigned: [%3d] (%.1f%)\n", total_accepted, (float)total_accepted / total * 100);
-	fprintf(fptr, "      Number of Bookings Rejected: [%3d] (%.1f%)\n", total_rejected, (float)total_rejected / total * 100);
+	fprintf(fptr, "      Number of Bookings Assigned: [%3d] (%.1f%%)\n", total_accepted, (float)total_accepted / total * 100);
+	fprintf(fptr, "      Number of Bookings Rejected: [%3d] (%.1f%%)\n", total_rejected, (float)total_rejected / total * 100);
 	fprintf(fptr, "\n");
 	fprintf(fptr, "Utilization of Time Slot:\n\n");
 	for (fid = 1; fid <= 10; fid++)	// for each facility
 	{
-		fprintf(fptr, "      %-13s - [%.1f%]\n", id2component(fid), (float)utilization[fid - 1] / M * 100);
+		fprintf(fptr, "      %-13s - [%.1f%%]\n", id2component(fid), (float)utilization[fid - 1] / M * 100);
 	}
 	fprintf(fptr, "\n     -End-     \n\n");
 	fclose(fptr);
@@ -857,14 +834,11 @@ int main(){
 		strcpy(stry,input);
 		
 		// set the start date for the system
-		if (reqno == 1 && strcmp(input[3],'B') != 0){	//if this is the first command, take this book's date as the start time of the whole booking period
+		if (reqno == 1){	//if this is the first command, take this book's date as the start time of the whole booking period
 			str = split(stry," ");
 			str = split(str[2],"-");
 			for(i=0;i<3;i++)
 			stdat[i] = atoi(str[i]);
-		}
-		else if (reqno == 1 && strcmp(input[3],'B') == 0){
-			stdat=getstdat(stry);
 		}
 		
 		request = inp(reqno, input, stdat);
