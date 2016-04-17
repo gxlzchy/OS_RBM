@@ -95,14 +95,7 @@ int** FCFS(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5]){
             }
         }
         
-        /*
-        for (j=1;j<=fNum[reqNum[i]][0];j++){
-            printf("facility #%d\n", fNum[reqNum[i]][j]);
-                for (k=st[reqNum[i]];k<=ed[reqNum[i]];k++)
-                    printf("%d ",status[  fNum[ reqNum[i] ][j]  ][k]);
-             printf("\n");
-        }
-        printf("\n");*/
+        
     }
     return reqStatus;
 }
@@ -139,9 +132,8 @@ int** greedy(int reqNum[], int numOfReq, int st[], int ed[],int fNum[][5]){
     
     //for testing
     for (i=0;i<numOfReq;i++){
-        printf("%d %d %d \n", requests[i][0],requests[i][1],requests[i][2]);
+        //printf("%d %d %d \n", requests[i][0],requests[i][1],requests[i][2]);
     }
-    printf("\n");
     
     int *a = (int*)malloc(N*sizeof(int));;
     int *b = (int*)malloc(N*sizeof(int));;
@@ -258,12 +250,12 @@ int* inp(int reqno, char input[], int *stdat){
 	6:1st device (ccc)
 	7:2nd device (ddd)
 	*/
-printf("the start date passedinto this inp fuction is: %d %d %d \n",stdat[0],stdat[1],stdat[2]);
+//printf("the start date passedinto this inp fuction is: %d %d %d \n",stdat[0],stdat[1],stdat[2]);
 	
 	switch (stry[0]){	/*for the case add booking command is entered*/
 		case 'a':	// "add<sth>"
 			result[0]=reqno;
-printf("second switch");
+//printf("second switch");
 			switch (splited[0][3]){
 				case 'M':	// "addMeeting"
 				case 'm':
@@ -272,7 +264,7 @@ printf("second switch");
 					switch(splited[1][6]){
 						case 'A':	// "room_A"
 							result[4] = 1;
-							printf("%s\n","abc");
+							//printf("%s\n","abc");
 							break;
 						case 'B':	// "room_B"
 							result[4] = 2;
@@ -350,59 +342,39 @@ printf("second switch");
 					if (fp == NULL)
 						exit(EXIT_FAILURE);
 					while ((read = getline(&line, &len,fp)) != -1){
-printf("i:%d\n",++i);
+++i;
 						if (result[1]>=1)
 						result = realloc(result,(sizeofarray+5)*sizeof(int));
 						sizeofarray+=5;
-printf("first hi reqno=%d",reqno);
+//printf("first hi reqno=%d",reqno);
 						add = inp(reqno,line,stdat);
-printf("hi");
+//printf("hi");
 						
 						result[1]++;
-						result[placeA] = reqno++;
-						printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!%d###################\n",result[placeA++]);
+						result[placeA++] = reqno++;
+						//printf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!%d###################\n",result[placeA++]);
 						result[placeA++] = add[1];
 						result[placeA++] = add[2];
 						result[placeA++] = add[3];
 						result[placeA++] = add[4];
-						printf("$$$$$$$$$$%d\n", result[placeA-1]);
+						//printf("$$$$$$$$$$%d\n", result[placeA-1]);
 						if (add[3] == 3){
 							result = realloc(result,(sizeofarray + 2)*sizeof(int));
-							printf("$$$$$$$$$$%d\n", result[placeA-1]);
+							//printf("$$$$$$$$$$%d\n", result[placeA-1]);
 							sizeofarray+=2;
 							result[placeA++] = add[5];
 							result[placeA++] = add[6];
 						}
 					}
-					printf("the request is addBatch\n");
+					//printf("the request is addBatch\n");
 					break;
 			}
 			
 			break;
 		case 'p':
-			/*call output and calculate*/
-			/*
-			printf("print out booking: %s\n", splited[1]);
-			result[0] = 0;
-			if (strcmp(splited[1], "–fcfs") == 0)
-			{
-				printf("fcfs\n");
-				result[0] = -3;
-			}
-			else if (strcmp(splited[1], "–prio") == 0)
-			{
-				printf("prio\n");
-				result[0] = -4;
-			}
-			else if (strcmp(splited[1], "–opti") == 0)
-			{
-				printf("opti\n");
-				result[0] = -5;
-			}
-			return result;
-			*/
 			
-			printf("print out booking\n");
+			
+			
 			result[0]=0;
 			return result;
 			break;
@@ -420,7 +392,7 @@ printf("hi");
 		dat = split(splited[2],"-");
 		for (i=0;i<3;i++)
 			date[i] = atoi(dat[i]);
-printf("%d %d %d \n",date[0],date[1],date[2]);
+//printf("%d %d %d \n",date[0],date[1],date[2]);
 		ti = split(splited[3],":");
 		tim = atoi(ti[0]) - 9;
 		ddif = datdif(stdat, date);
@@ -428,11 +400,11 @@ printf("%d %d %d \n",date[0],date[1],date[2]);
 		du = split(splited[4],".");
 		dur = atoi(du[0]);
 		result[2] = result[1] + dur -1;
-printf("%d %d %d\n",ddif, tim, dur);
+//printf("%d %d %d\n",ddif, tim, dur);
 		//
 	
 	}
-	printf("%d %d %d %d %d\n",result[0],result[1],result[2],result[3],result[4]);
+	//printf("%d %d %d %d %d\n",result[0],result[1],result[2],result[3],result[4]);
 	return result;
 }
 
@@ -451,20 +423,20 @@ int *getstdat(char fil[]){
 					ssize_t read;
 					int *stda=malloc(3*sizeof(int));
 strcpy(str,fil);
-printf("copied\n");
+//printf("copied\n");
 finame = split(str," ");
 
 
 finame = split(finame[1],"-");
-printf("ok!%s\n",finame[0]);
+//printf("ok!%s\n",finame[0]);
 					fp = fopen(finame[0],"r");
-printf("opended file\n");
+//printf("opended file\n");
 					if (fp == NULL)
 						exit(EXIT_FAILURE);
 read = getline(&line, &len,fp);
-printf("readed a line\n");
-printf("%s\n",line);
-printf("copied!!!!!!!!!\n");
+//printf("readed a line\n");
+//printf("%s\n",line);
+//printf("copied!!!!!!!!!\n");
 stry = split(line," ");
 			        a = split(stry[2],"-");
 			        for(i=0;i<3;i++)
@@ -520,8 +492,8 @@ int datdif(int stdat[], int dat[])
 	int diff;
 	int day = dat[2],year = dat[0] ,month = dat[1];
 	int stday = stdat[2],styear = stdat[0] ,stmonth = stdat[1];
-printf("day = %d\n",day);
-printf("stday = %d\n",stday);
+//printf("day = %d\n",day);
+//printf("stday = %d\n",stday);
 
 	if (month > stmonth){  /*if the period is across two months*/
 		if ((stmonth == 4) || (stmonth == 6) || (stmonth == 9) || (stmonth == 11)){
@@ -631,7 +603,7 @@ void output2dat(int reqNum[], int num_requests, int st[], int ed[],int fNum[][5]
 
 	for (i = 0; i <= num_requests; i++)
 	{
-		printf("Record %d: [%s]\n", i, inputLines[i]);
+		//printf("Record %d: [%s]\n", i, inputLines[i]);
 	}
 	
 	char title1[] = "***Room Booking - ACCEPTED***";
@@ -644,7 +616,7 @@ void output2dat(int reqNum[], int num_requests, int st[], int ed[],int fNum[][5]
 	//char filename[15] = "opti";
 	strcat(filename, algor);
 	strcat(filename, "_Schd.dat");
-	printf("filename: [%s]\n", filename);
+	//printf("filename: [%s]\n", filename);
 	
 	// ###Room Booking - ACCEPTED###
 	// open and overwrite the corresponding output file
@@ -953,7 +925,7 @@ int main(){
 			input[--len] = '\0';
 		strcpy(stry,input);
 		
-		printf("1. input: [%s]\n", input);
+		//printf("1. input: [%s]\n", input);
 		
 		// set the start date for the system
 		if (reqno == 1 && input[3]!='B'){	//if this is the first command, take this book's date as the start time of the whole booking period
@@ -964,13 +936,13 @@ str = split(stry," ");
 			stdat[i] = atoi(str[i]);
 		}
 		else if (reqno == 1 && input[3]=='B'){
-printf("start getstdat functino\n");
+//printf("start getstdat functino\n");
 			stdat=getstdat(stry);
 		}
-printf("the start date has been set %d %d %d\n",stdat[0],stdat[1],stdat[2]);		
+//printf("the start date has been set %d %d %d\n",stdat[0],stdat[1],stdat[2]);		
 		request = inp(reqno, input, stdat);
 		
-		printf("2. input: [%s]\n", input);
+		//printf("2. input: [%s]\n", input);
 		if (request[0]>0){
 			strcpy(all[commandno++],input);
 			reqNum[reqno] = request[0];
@@ -984,7 +956,7 @@ printf("the start date has been set %d %d %d\n",stdat[0],stdat[1],stdat[2]);
 			}
 			reqno++;
 			commandno++;
-			printf("3. input: [%s]\n", input);
+			//printf("3. input: [%s]\n", input);
 		}
 		else if(request[0] == 0)
 		{
@@ -996,49 +968,45 @@ printf("the start date has been set %d %d %d\n",stdat[0],stdat[1],stdat[2]);
 			// 14073927d@csdoor.comp.polyu.edu.hk
 			// addBatch tests3.dat
 			// printSchd -fcfsout
-			for (i=0;i<commandno;i++)
-				printf("command(%d):%s\n",i,all[i]);
-			for (i=1;i<reqno;i++)
-				printf("%d %d %d %d %d\n",reqNum[i],st[i],ed[i],fNum[i][0],fNum[i][1]);
-			printf("hello start of print module\n");
+			
 			int num_requests = reqno-1;
 			int reqNum2[N];
 			for(i=1;i<=reqno;i++)
 				reqNum2[i-1]=reqNum[i];
-			printf("the requestno is: %d\n",num_requests);
-			printf("the reqNum2 = %d\n" , reqNum2[0]);
+			//printf("the requestno is: %d\n",num_requests);
+			//printf("the reqNum2 = %d\n" , reqNum2[0]);
 			/*
 			int **reqStatus=greedy(reqNum2,num_requests,st,ed,fNum);
 			*/
 			
 			int printornot = 1;
-			printf("before selection\n");
-			printf("which algor is used [%s]? ", input);
+			//printf("before selection\n");
+			//printf("which algor is used [%s]? ", input);
 			int **reqStatus;
 			char filename[5] = "";
 			if (input[11] == 'f')
 			{
-				printf("fcfs\n");
+				//printf("fcfs\n");
 				reqStatus=FCFS(reqNum2,num_requests,st,ed,fNum);
 				printornot = 0;
 				strcpy(filename, "FCFS");
 			}
 			else if (input[11] == 'p')
 			{
-				printf("prio\n");
+				//printf("prio\n");
 				reqStatus=greedy(reqNum2,num_requests,st,ed,fNum);
 				printornot = 0;
 				strcpy(filename, "PRIO");
 			}
 			else if (input[11] == 'o')
 			{
-				printf("opti\nno such algor\n");
+				//printf("opti\nno such algor\n");
 			}
 			
 			
 			if (printornot == 0)
 			{
-				printf("greedy finished in print module\n");
+				//printf("greedy finished in print module\n");
 				int total_accepted = 0;
 				int total_rejected = 0;
 				for (i=0;i<num_requests;i++)
@@ -1047,7 +1015,7 @@ printf("the start date has been set %d %d %d\n",stdat[0],stdat[1],stdat[2]);
 						total_accepted++;
 					else
 						total_rejected++;
-					printf("request #%d %s\n", reqStatus[i][0], reqStatus[i][1]==1?"accept":"reject");
+					//printf("request #%d %s\n", reqStatus[i][0], reqStatus[i][1]==1?"accept":"reject");
 				}
 				
 				output2dat(reqNum, num_requests, st, ed, fNum, reqStatus, total_accepted, total_rejected, filename, all);
@@ -1060,7 +1028,7 @@ printf("the start date has been set %d %d %d\n",stdat[0],stdat[1],stdat[2]);
 			// ###################################################
 		}
 		else if (request[0] == -1){
-			printf("end of program, thanks for using!");
+			printf("end of program, thanks for using!\n");
 			break;
 		}
 		else if (request[0] == -2){	// read input from a batch file
@@ -1076,41 +1044,39 @@ printf("the start date has been set %d %d %d\n",stdat[0],stdat[1],stdat[2]);
 			flename = split(inputspl[1],"-");
 			ff = fopen(flename[0],"r");
 			strcpy(all[commandno++],input);
-printf("Total number of request read:%d the reqno now is:%d\n",request[1],reqno);
+//printf("Total number of request read:%d the reqno now is:%d\n",request[1],reqno);
 			for (i=0;i<=request[1]+1;i++){
 				getline(&lin,&leng,ff);
-printf("line :%s is saving into the array all in place (commandno):%d\n",lin,commandno);
+//printf("line :%s is saving into the array all in place (commandno):%d\n",lin,commandno);
 				strcpy(all[commandno++],lin);
 				
-				printf("!!!!!!!!!!!!!!!!!!%d",request[2]);
-				printf("a%d",request[place]);
+				//printf("!!!!!!!!!!!!!!!!!!%d",request[2]);
+				//printf("a%d",request[place]);
 				reqNum[reqno] = request[place++];
-				printf("a%d",request[place]);
+				//printf("a%d",request[place]);
 				st[reqno] = request[place++];
-				printf("a%d",request[place]);
+				//printf("a%d",request[place]);
 				ed[reqno] = request[place++];
-				printf("anumber of devices%d",request[place]);
+				//printf("anumber of devices%d",request[place]);
 				fNum[reqno][0] = request[place++];
-				printf("a%d",request[place]);
+				//printf("a%d",request[place]);
 				fNum[reqno][1] = request[place++];
 				if (request[place-2] == 3){
-				printf("a%d",request[place]);	
+				//printf("a%d",request[place]);	
 					fNum[reqno][2] = request[place++];
-printf("a%d",request[place]);					
+//printf("a%d",request[place]);					
 fNum[reqno][3] = request[place++];
 				}
-				printf("\n");
- for(i=1;i<reqno+1;i++)
-                        printf("resultttttttttttttttttttttttttttttt %d %d %d %d %d\n",reqNum[i],st[i],ed[i],fNum[i][0],fNum[i][1]);
+				i=reqno+1;
 				reqno++;
 			}
 request[0] = reqno;
 			
 			
 		}
-printf("%d %d %d %d %d\n",reqNum[reqno-1],st[reqno-1],ed[reqno-1],fNum[reqno-1][0],fNum[reqno-1][1]);
-printf("now reqno = %d \n",request[0]);
-printf("\n");
+//printf("%d %d %d %d %d\n",reqNum[reqno-1],st[reqno-1],ed[reqno-1],fNum[reqno-1][0],fNum[reqno-1][1]);
+//printf("now reqno = %d \n",request[0]);
+//printf("\n");
 //char **info;
 //info = getinfo(62,all);
 //printf("the getinfo result is:%s %s %s\n",info[0],info[1],info[2]);
