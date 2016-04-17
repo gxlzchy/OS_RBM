@@ -692,19 +692,33 @@ void output2dat(int reqNum[], int num_requests, int st[], int ed[],int fNum[][5]
 			n = atoi(buffer);
 			int records[n];
 			char recordline[80];
-			char** tokens;
+			char **tokens;
+			char startingtime[6];
+			char c;
+			char *type;
+			type = (char*)malloc(15*sizeof(char));
 			for (i = 0; i < n; i++)
 			{
 				read(fd[fid-1][0], buffer, 10);
 				records[i] = atoi(buffer);
-				//date = split(input, " ")[2]
-				//requester = split(input, " ")[5]
-				char period[2][6];
-				sprintf(period[0], "%d:00", st[records[i]] + 9);
-				sprintf(period[1], "%d:00", ed[records[i]] + 9);
+
 				strcpy(recordline, inputLines[records[i]]);
 				tokens = split(recordline, " ");
-				fprintf(fptr, "%-5d%-13s%-8s%-8s%-14s%-11s%s\n", records[i], tokens[2], period[0], period[1], "undefined", split(tokens[5], ";")[0], id2component(fNum[records[i]][1]));
+
+				strcpy(startingtime, tokens[3]);
+				char period[6];
+				sprintf(period, "%d:00", atoi(split(startingtime, ":")[0]) + atoi(tokens[4]));
+
+				if (tokens[0][3] == 'P')
+					strcpy(type, "Presentation");
+				else if (tokens[0][3] == 'D')
+					strcpy(type, "Device");
+				else if (tokens[0][3] == 'C')
+					strcpy(type, "Conference");
+				else if (tokens[0][3] == 'M')
+					strcpy(type, "Meeting");
+
+				fprintf(fptr, "%-5d%-13s%-8s%-8s%-14s%-11s%s\n", records[i], tokens[2], tokens[3], period, type, split(tokens[5], ";")[0], id2component(fNum[records[i]][1]));
 				for (k = 2; k <= fNum[records[i]][0]; k++)
 					fprintf(fptr, "                                                           %s\n", id2component(fNum[records[i]][k]));
 				num_bookings++;
@@ -801,19 +815,37 @@ void output2dat(int reqNum[], int num_requests, int st[], int ed[],int fNum[][5]
 			
 			int n, rid;	// record id
 			char buffer[10];
-			read(fd2[fid-1][0], buffer, 10);
+			read(fd[fid-1][0], buffer, 10);
 			n = atoi(buffer);
 			int records[n];
+			char recordline[80];
+			char **tokens;
+			char startingtime[6];
+			char c;
+			char *type;
+			type = (char*)malloc(15*sizeof(char));
 			for (i = 0; i < n; i++)
 			{
-				read(fd2[fid-1][0], buffer, 10);
+				read(fd[fid-1][0], buffer, 10);
 				records[i] = atoi(buffer);
-				//date = split(input, " ")[2]
-				//requester = split(input, " ")[5]
-				char period[2][6];
-				sprintf(period[0], "%d:00", st[records[i]] + 9);
-				sprintf(period[1], "%d:00", ed[records[i]] + 9);
-				fprintf(fptr, "%-5d%-13s%-8s%-8s%-14s%-11s%s\n", records[i], "YYYY-MM-DD", period[0], period[1], "undefined", "undefined", id2component(fNum[records[i]][1]));
+
+				strcpy(recordline, inputLines[records[i]]);
+				tokens = split(recordline, " ");
+
+				strcpy(startingtime, tokens[3]);
+				char period[6];
+				sprintf(period, "%d:00", atoi(split(startingtime, ":")[0]) + atoi(tokens[4]));
+
+				if (tokens[0][3] == 'P')
+					strcpy(type, "Presentation");
+				else if (tokens[0][3] == 'D')
+					strcpy(type, "Device");
+				else if (tokens[0][3] == 'C')
+					strcpy(type, "Conference");
+				else if (tokens[0][3] == 'M')
+					strcpy(type, "Meeting");
+
+				fprintf(fptr, "%-5d%-13s%-8s%-8s%-14s%-11s%s\n", records[i], tokens[2], tokens[3], period, type, split(tokens[5], ";")[0], id2component(fNum[records[i]][1]));
 				for (k = 2; k <= fNum[records[i]][0]; k++)
 					fprintf(fptr, "                                                           %s\n", id2component(fNum[records[i]][k]));
 				num_rejection++;
