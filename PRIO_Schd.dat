@@ -1,17 +1,175 @@
 ***Room Booking - ACCEPTED***
 
-Child 8798: [room_A] has the following bookings:
+Child 12703: [room_A] has the following bookings:
 
 ID   Date         Start   End     Type          Requester  Facility
 ================================================================================
-21   YYYY-MM-DD   46:00   47:00   undefined     undefined  room_A
-18   YYYY-MM-DD   43:00   45:00   undefined     undefined  room_A
-16   YYYY-MM-DD   39:00   41:00   undefined     undefined  room_A
-1    YYYY-MM-DD   16:00   17:00   undefined     undefined  room_A
-6    YYYY-MM-DD   14:00   15:00   undefined     undefined  room_A
+28   2016-04-12   09:00   13:00   Meeting       tenant_C   room_A
+55   2016-04-11   09:00   18:00   Conference    tenant_A   room_A
+                                                           webcam_720p
+                                                           monitor_50
+37   2016-04-10   15:00   18:00   Conference    tenant_C   room_A
+                                                           webcam_1080p
+                                                           monitor_75
+36   2016-04-10   12:00   15:00   Conference    tenant_C   room_A
+                                                           webcam_1080p
+                                                           monitor_75
+35   2016-04-10   09:00   12:00   Conference    tenant_C   room_A
+                                                           webcam_1080p
+                                                           monitor_75
+34   2016-04-08   15:00   18:00   Presentation  tenant_B   room_A
                                                            projector_xga
                                                            screen_100
-7    YYYY-MM-DD   12:00   13:00   undefined     undefined  room_A
+31   2016-04-08   11:00   15:00   Conference    tenant_A   room_A
+                                                           webcam_720p
+                                                           monitor_50
+33   2016-04-08   09:00   11:00   Meeting       tenant_C   room_A
+21   2016-04-04   16:00   18:00   Meeting       tenant_C   room_A
+18   2016-04-04   13:00   16:00   Meeting       tenant_B   room_A
+16   2016-04-04   09:00   12:00   Meeting       tenant_A   room_A
+1    2016-04-01   16:00   18:00   Meeting       tenant_A   room_A
+6    2016-04-01   14:00   16:00   Presentation  tenant_B   room_A
+                                                           projector_xga
+                                                           screen_100
+7    2016-04-01   12:00   14:00   Conference    tenant_C   room_A
+                                                           webcam_720p
+                                                           monitor_75
+################################################################################
+#                There is/are [14] booking(s) for this facility.               #
+################################################################################
+
+
+
+Child 12704: [room_B] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+29   2016-04-12   09:00   13:00   Meeting       tenant_C   room_B
+54   2016-04-11   16:00   18:00   Meeting       tenant_B   room_B
+40   2016-04-10   15:00   18:00   Conference    tenant_C   room_B
+                                                           webcam_720p
+                                                           monitor_50
+39   2016-04-10   12:00   15:00   Conference    tenant_C   room_B
+                                                           webcam_720p
+                                                           monitor_50
+38   2016-04-10   09:00   12:00   Conference    tenant_C   room_B
+                                                           webcam_720p
+                                                           monitor_50
+32   2016-04-08   15:00   18:00   Conference    tenant_A   room_B
+                                                           webcam_720p
+                                                           monitor_75
+13   2016-04-03   11:00   13:00   Conference    tenant_B   room_B
+                                                           webcam_720p
+                                                           monitor_50
+9    2016-04-02   10:00   13:00   Presentation  tenant_B   room_B
+                                                           projector_fhd
+                                                           screen_100
+################################################################################
+#                There is/are [ 8] booking(s) for this facility.               #
+################################################################################
+
+
+
+Child 12705: [webcam_720p] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+55   2016-04-11   09:00   18:00   Conference    tenant_A   room_A
+                                                           webcam_720p
+                                                           monitor_50
+40   2016-04-10   15:00   18:00   Conference    tenant_C   room_B
+                                                           webcam_720p
+                                                           monitor_50
+39   2016-04-10   12:00   15:00   Conference    tenant_C   room_B
+                                                           webcam_720p
+                                                           monitor_50
+38   2016-04-10   09:00   12:00   Conference    tenant_C   room_B
+                                                           webcam_720p
+                                                           monitor_50
+32   2016-04-08   15:00   18:00   Conference    tenant_A   room_B
+                                                           webcam_720p
+                                                           monitor_75
+31   2016-04-08   11:00   15:00   Conference    tenant_A   room_A
+                                                           webcam_720p
+                                                           monitor_50
+13   2016-04-03   11:00   13:00   Conference    tenant_B   room_B
+                                                           webcam_720p
+                                                           monitor_50
+4    2016-04-01   16:00   18:00   Device        tenant_A   webcam_720p
+7    2016-04-01   12:00   14:00   Conference    tenant_C   room_A
+                                                           webcam_720p
+                                                           monitor_75
+################################################################################
+#                There is/are [ 9] booking(s) for this facility.               #
+################################################################################
+
+
+
+Child 12706: [webcam_1080p] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+37   2016-04-10   15:00   18:00   Conference    tenant_C   room_A
+                                                           webcam_1080p
+                                                           monitor_75
+36   2016-04-10   12:00   15:00   Conference    tenant_C   room_A
+                                                           webcam_1080p
+                                                           monitor_75
+35   2016-04-10   09:00   12:00   Conference    tenant_C   room_A
+                                                           webcam_1080p
+                                                           monitor_75
+################################################################################
+#                There is/are [ 3] booking(s) for this facility.               #
+################################################################################
+
+
+
+Child 12707: [monitor_50] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+55   2016-04-11   09:00   18:00   Conference    tenant_A   room_A
+                                                           webcam_720p
+                                                           monitor_50
+40   2016-04-10   15:00   18:00   Conference    tenant_C   room_B
+                                                           webcam_720p
+                                                           monitor_50
+39   2016-04-10   12:00   15:00   Conference    tenant_C   room_B
+                                                           webcam_720p
+                                                           monitor_50
+38   2016-04-10   09:00   12:00   Conference    tenant_C   room_B
+                                                           webcam_720p
+                                                           monitor_50
+31   2016-04-08   11:00   15:00   Conference    tenant_A   room_A
+                                                           webcam_720p
+                                                           monitor_50
+13   2016-04-03   11:00   13:00   Conference    tenant_B   room_B
+                                                           webcam_720p
+                                                           monitor_50
+################################################################################
+#                There is/are [ 6] booking(s) for this facility.               #
+################################################################################
+
+
+
+Child 12708: [monitor_75] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+37   2016-04-10   15:00   18:00   Conference    tenant_C   room_A
+                                                           webcam_1080p
+                                                           monitor_75
+36   2016-04-10   12:00   15:00   Conference    tenant_C   room_A
+                                                           webcam_1080p
+                                                           monitor_75
+35   2016-04-10   09:00   12:00   Conference    tenant_C   room_A
+                                                           webcam_1080p
+                                                           monitor_75
+32   2016-04-08   15:00   18:00   Conference    tenant_A   room_B
+                                                           webcam_720p
+                                                           monitor_75
+5    2016-04-01   16:00   18:00   Device        tenant_A   monitor_75
+7    2016-04-01   12:00   14:00   Conference    tenant_C   room_A
                                                            webcam_720p
                                                            monitor_75
 ################################################################################
@@ -20,127 +178,75 @@ ID   Date         Start   End     Type          Requester  Facility
 
 
 
-Child 8800: [room_B] has the following bookings:
+Child 12709: [projector_fhd] has the following bookings:
 
 ID   Date         Start   End     Type          Requester  Facility
 ================================================================================
-13   YYYY-MM-DD   31:00   32:00   undefined     undefined  room_B
-                                                           webcam_720p
-                                                           monitor_50
-9    YYYY-MM-DD   20:00   22:00   undefined     undefined  room_B
+43   2016-04-10   15:00   18:00   Device        tenant_C   projector_fhd
+42   2016-04-10   12:00   15:00   Device        tenant_C   projector_fhd
+41   2016-04-10   09:00   12:00   Device        tenant_C   projector_fhd
+26   2016-04-04   09:00   18:00   Device        tenant_A   projector_fhd
+9    2016-04-02   10:00   13:00   Presentation  tenant_B   room_B
                                                            projector_fhd
                                                            screen_100
 ################################################################################
-#                There is/are [ 2] booking(s) for this facility.               #
+#                There is/are [ 5] booking(s) for this facility.               #
 ################################################################################
 
 
 
-Child 8801: [webcam_720p] has the following bookings:
+Child 12710: [projector_xga] has the following bookings:
 
 ID   Date         Start   End     Type          Requester  Facility
 ================================================================================
-13   YYYY-MM-DD   31:00   32:00   undefined     undefined  room_B
-                                                           webcam_720p
-                                                           monitor_50
-4    YYYY-MM-DD   16:00   17:00   undefined     undefined  webcam_720p
-7    YYYY-MM-DD   12:00   13:00   undefined     undefined  room_A
-                                                           webcam_720p
-                                                           monitor_75
-################################################################################
-#                There is/are [ 3] booking(s) for this facility.               #
-################################################################################
-
-
-
-Child 8802: [webcam_1080p] has the following bookings:
-
-ID   Date         Start   End     Type          Requester  Facility
-================================================================================
-################################################################################
-#                  There is no any booking for this facility.                  #
-################################################################################
-
-
-
-Child 8803: [monitor_50] has the following bookings:
-
-ID   Date         Start   End     Type          Requester  Facility
-================================================================================
-13   YYYY-MM-DD   31:00   32:00   undefined     undefined  room_B
-                                                           webcam_720p
-                                                           monitor_50
-################################################################################
-#                There is/are [ 1] booking(s) for this facility.               #
-################################################################################
-
-
-
-Child 8804: [monitor_75] has the following bookings:
-
-ID   Date         Start   End     Type          Requester  Facility
-================================================================================
-5    YYYY-MM-DD   16:00   17:00   undefined     undefined  monitor_75
-7    YYYY-MM-DD   12:00   13:00   undefined     undefined  room_A
-                                                           webcam_720p
-                                                           monitor_75
-################################################################################
-#                There is/are [ 2] booking(s) for this facility.               #
-################################################################################
-
-
-
-Child 8805: [projector_fhd] has the following bookings:
-
-ID   Date         Start   End     Type          Requester  Facility
-================================================================================
-26   YYYY-MM-DD   39:00   47:00   undefined     undefined  projector_fhd
-9    YYYY-MM-DD   20:00   22:00   undefined     undefined  room_B
-                                                           projector_fhd
+46   2016-04-10   15:00   18:00   Device        tenant_C   projector_xga
+45   2016-04-10   12:00   15:00   Device        tenant_C   projector_xga
+44   2016-04-10   09:00   12:00   Device        tenant_C   projector_xga
+34   2016-04-08   15:00   18:00   Presentation  tenant_B   room_A
+                                                           projector_xga
                                                            screen_100
-################################################################################
-#                There is/are [ 2] booking(s) for this facility.               #
-################################################################################
-
-
-
-Child 8806: [projector_xga] has the following bookings:
-
-ID   Date         Start   End     Type          Requester  Facility
-================================================================================
-2    YYYY-MM-DD   16:00   17:00   undefined     undefined  projector_xga
-6    YYYY-MM-DD   14:00   15:00   undefined     undefined  room_A
+2    2016-04-01   16:00   18:00   Device        tenant_A   projector_xga
+6    2016-04-01   14:00   16:00   Presentation  tenant_B   room_A
                                                            projector_xga
                                                            screen_100
 ################################################################################
-#                There is/are [ 2] booking(s) for this facility.               #
+#                There is/are [ 6] booking(s) for this facility.               #
 ################################################################################
 
 
 
-Child 8807: [screen_100] has the following bookings:
+Child 12711: [screen_100] has the following bookings:
 
 ID   Date         Start   End     Type          Requester  Facility
 ================================================================================
-9    YYYY-MM-DD   20:00   22:00   undefined     undefined  room_B
+49   2016-04-10   15:00   18:00   Device        tenant_C   screen_100
+48   2016-04-10   12:00   15:00   Device        tenant_C   screen_100
+47   2016-04-10   09:00   12:00   Device        tenant_C   screen_100
+34   2016-04-08   15:00   18:00   Presentation  tenant_B   room_A
+                                                           projector_xga
+                                                           screen_100
+9    2016-04-02   10:00   13:00   Presentation  tenant_B   room_B
                                                            projector_fhd
                                                            screen_100
-3    YYYY-MM-DD   16:00   17:00   undefined     undefined  screen_100
-6    YYYY-MM-DD   14:00   15:00   undefined     undefined  room_A
+3    2016-04-01   16:00   18:00   Device        tenant_A   screen_100
+6    2016-04-01   14:00   16:00   Presentation  tenant_B   room_A
                                                            projector_xga
                                                            screen_100
 ################################################################################
-#                There is/are [ 3] booking(s) for this facility.               #
+#                There is/are [ 7] booking(s) for this facility.               #
 ################################################################################
 
 
 
-Child 8808: [screen_150] has the following bookings:
+Child 12712: [screen_150] has the following bookings:
 
 ID   Date         Start   End     Type          Requester  Facility
 ================================================================================
+52   2016-04-10   15:00   18:00   Device        tenant_C   screen_150
+51   2016-04-10   12:00   15:00   Device        tenant_C   screen_150
+50   2016-04-10   09:00   12:00   Device        tenant_C   screen_150
 ################################################################################
-#                  There is no any booking for this facility.                  #
+#                There is/are [ 3] booking(s) for this facility.               #
 ################################################################################
 
 
@@ -149,116 +255,181 @@ ID   Date         Start   End     Type          Requester  Facility
 
 ***Room Booking - REJECTED***
 
-Child 8809: [room_A] has the following bookings:
+Child 12713: [room_A] has the following bookings:
 
 ID   Date         Start   End     Type          Requester  Facility
 ================================================================================
-17   YYYY-MM-DD   42:00   46:00   undefined     undefined  room_A
-22   YYYY-MM-DD   44:00   45:00   undefined     undefined  room_A
-24   YYYY-MM-DD   41:00   44:00   undefined     undefined  room_A
-19   YYYY-MM-DD   42:00   44:00   undefined     undefined  room_A
-20   YYYY-MM-DD   44:00   44:00   undefined     undefined  room_A
-23   YYYY-MM-DD   42:00   43:00   undefined     undefined  room_A
-25   YYYY-MM-DD   40:00   41:00   undefined     undefined  room_A
+56   2016-04-11   09:00   18:00   Conference    tenant_A   room_A
+                                                           webcam_1080p
+                                                           monitor_75
+57   2016-04-11   09:00   18:00   Presentation  tenant_A   room_A
+                                                           projector_xga
+                                                           screen_100
+58   2016-04-11   09:00   18:00   Presentation  tenant_A   room_A
+                                                           projector_fhd
+                                                           screen_150
+53   2016-04-11   10:00   11:00   Meeting       tenant_B   room_A
+17   2016-04-04   12:00   17:00   Meeting       tenant_A   room_A
+22   2016-04-04   14:00   16:00   Meeting       tenant_C   room_A
+24   2016-04-04   11:00   15:00   Meeting       tenant_A   room_A
+19   2016-04-04   12:00   15:00   Meeting       tenant_B   room_A
+20   2016-04-04   14:00   15:00   Meeting       tenant_B   room_A
+23   2016-04-04   12:00   14:00   Meeting       tenant_C   room_A
+25   2016-04-04   10:00   12:00   Meeting       tenant_C   room_A
 ################################################################################
-#            There is/are [ 7] booking(s) rejected for this facility.          #
+#            There is/are [11] booking(s) rejected for this facility.          #
 ################################################################################
 
 
 
-Child 8810: [room_B] has the following bookings:
+Child 12714: [room_B] has the following bookings:
 
 ID   Date         Start   End     Type          Requester  Facility
 ================================================================================
-15   YYYY-MM-DD   32:00   32:00   undefined     undefined  room_B
-8    YYYY-MM-DD   19:00   21:00   undefined     undefined  room_B
+59   2016-04-11   09:00   17:00   Conference    tenant_C   room_B
+                                                           webcam_720p
+                                                           monitor_50
+60   2016-04-11   09:00   17:00   Conference    tenant_C   room_B
+                                                           webcam_1080p
+                                                           monitor_75
+61   2016-04-11   09:00   17:00   Presentation  tenant_C   room_B
+                                                           projector_xga
+                                                           screen_100
+62   2016-04-11   09:00   17:00   Presentation  tenant_C   room_B
+                                                           projector_fhd
+                                                           screen_150
+15   2016-04-03   12:00   13:00   Meeting       tenant_A   room_B
+8    2016-04-02   09:00   12:00   Meeting       tenant_A   room_B
+################################################################################
+#            There is/are [ 6] booking(s) rejected for this facility.          #
+################################################################################
+
+
+
+Child 12715: [webcam_720p] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+59   2016-04-11   09:00   17:00   Conference    tenant_C   room_B
+                                                           webcam_720p
+                                                           monitor_50
+30   2016-04-08   14:00   16:00   Device        tenant_B   webcam_720p
+14   2016-04-03   12:00   13:00   Device        tenant_A   webcam_720p
+################################################################################
+#            There is/are [ 3] booking(s) rejected for this facility.          #
+################################################################################
+
+
+
+Child 12716: [webcam_1080p] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+56   2016-04-11   09:00   18:00   Conference    tenant_A   room_A
+                                                           webcam_1080p
+                                                           monitor_75
+60   2016-04-11   09:00   17:00   Conference    tenant_C   room_B
+                                                           webcam_1080p
+                                                           monitor_75
 ################################################################################
 #            There is/are [ 2] booking(s) rejected for this facility.          #
 ################################################################################
 
 
 
-Child 8811: [webcam_720p] has the following bookings:
+Child 12717: [monitor_50] has the following bookings:
 
 ID   Date         Start   End     Type          Requester  Facility
 ================================================================================
-14   YYYY-MM-DD   32:00   32:00   undefined     undefined  webcam_720p
-################################################################################
-#            There is/are [ 1] booking(s) rejected for this facility.          #
-################################################################################
-
-
-
-Child 8812: [webcam_1080p] has the following bookings:
-
-ID   Date         Start   End     Type          Requester  Facility
-================================================================================
-################################################################################
-#              There is no any booking rejected for this facility.             #
-################################################################################
-
-
-
-Child 8813: [monitor_50] has the following bookings:
-
-ID   Date         Start   End     Type          Requester  Facility
-================================================================================
-12   YYYY-MM-DD   32:00   32:00   undefined     undefined  monitor_50
-################################################################################
-#            There is/are [ 1] booking(s) rejected for this facility.          #
-################################################################################
-
-
-
-Child 8814: [monitor_75] has the following bookings:
-
-ID   Date         Start   End     Type          Requester  Facility
-================================================================================
-################################################################################
-#              There is no any booking rejected for this facility.             #
-################################################################################
-
-
-
-Child 8815: [projector_fhd] has the following bookings:
-
-ID   Date         Start   End     Type          Requester  Facility
-================================================================================
-27   YYYY-MM-DD   46:00   47:00   undefined     undefined  projector_fhd
-10   YYYY-MM-DD   19:00   21:00   undefined     undefined  projector_fhd
+59   2016-04-11   09:00   17:00   Conference    tenant_C   room_B
+                                                           webcam_720p
+                                                           monitor_50
+12   2016-04-03   12:00   13:00   Device        tenant_A   monitor_50
 ################################################################################
 #            There is/are [ 2] booking(s) rejected for this facility.          #
 ################################################################################
 
 
 
-Child 8816: [projector_xga] has the following bookings:
+Child 12718: [monitor_75] has the following bookings:
 
 ID   Date         Start   End     Type          Requester  Facility
 ================================================================================
+56   2016-04-11   09:00   18:00   Conference    tenant_A   room_A
+                                                           webcam_1080p
+                                                           monitor_75
+60   2016-04-11   09:00   17:00   Conference    tenant_C   room_B
+                                                           webcam_1080p
+                                                           monitor_75
 ################################################################################
-#              There is no any booking rejected for this facility.             #
+#            There is/are [ 2] booking(s) rejected for this facility.          #
 ################################################################################
 
 
 
-Child 8817: [screen_100] has the following bookings:
+Child 12719: [projector_fhd] has the following bookings:
 
 ID   Date         Start   End     Type          Requester  Facility
 ================================================================================
-11   YYYY-MM-DD   19:00   21:00   undefined     undefined  screen_100
+58   2016-04-11   09:00   18:00   Presentation  tenant_A   room_A
+                                                           projector_fhd
+                                                           screen_150
+62   2016-04-11   09:00   17:00   Presentation  tenant_C   room_B
+                                                           projector_fhd
+                                                           screen_150
+27   2016-04-04   16:00   18:00   Device        tenant_A   projector_fhd
+10   2016-04-02   09:00   12:00   Device        tenant_A   projector_fhd
 ################################################################################
-#            There is/are [ 1] booking(s) rejected for this facility.          #
+#            There is/are [ 4] booking(s) rejected for this facility.          #
 ################################################################################
 
 
 
-Child 8818: [screen_150] has the following bookings:
+Child 12720: [projector_xga] has the following bookings:
 
 ID   Date         Start   End     Type          Requester  Facility
 ================================================================================
+57   2016-04-11   09:00   18:00   Presentation  tenant_A   room_A
+                                                           projector_xga
+                                                           screen_100
+61   2016-04-11   09:00   17:00   Presentation  tenant_C   room_B
+                                                           projector_xga
+                                                           screen_100
 ################################################################################
-#              There is no any booking rejected for this facility.             #
+#            There is/are [ 2] booking(s) rejected for this facility.          #
+################################################################################
+
+
+
+Child 12721: [screen_100] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+57   2016-04-11   09:00   18:00   Presentation  tenant_A   room_A
+                                                           projector_xga
+                                                           screen_100
+61   2016-04-11   09:00   17:00   Presentation  tenant_C   room_B
+                                                           projector_xga
+                                                           screen_100
+11   2016-04-02   09:00   12:00   Device        tenant_A   screen_100
+################################################################################
+#            There is/are [ 3] booking(s) rejected for this facility.          #
+################################################################################
+
+
+
+Child 12722: [screen_150] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+58   2016-04-11   09:00   18:00   Presentation  tenant_A   room_A
+                                                           projector_fhd
+                                                           screen_150
+62   2016-04-11   09:00   17:00   Presentation  tenant_C   room_B
+                                                           projector_fhd
+                                                           screen_150
+################################################################################
+#            There is/are [ 2] booking(s) rejected for this facility.          #
 ################################################################################
 
 

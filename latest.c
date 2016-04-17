@@ -4,8 +4,8 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define N 100    // The maximun acceptable number of request.
-#define M 90    // The maximun duration of all requests is two weeks time: 2*5(per week)*9(9am-6pm)=90.
+#define N 1000    // The maximun acceptable number of request.
+#define M 240    // The maximun duration of all requests is two weeks time: 2*5(per week)*9(9am-6pm)=90.
 
 /*
 Use the following id numbers to represent different components:

@@ -1,21 +1,21 @@
 Performance:
 
-Total Number of Bookings Received: [ 14]
-      Number of Bookings Assigned: [ 12] (85.7%)
-      Number of Bookings Rejected: [  2] (14.3%)
+Total Number of Bookings Received: [ 62]
+      Number of Bookings Assigned: [ 39] (62.9%)
+      Number of Bookings Rejected: [ 23] (37.1%)
 
 Utilization of Time Slot:
 
-      room_A        - [3.3%]
-      room_B        - [2.2%]
-      webcam_720p   - [2.2%]
-      webcam_1080p  - [0.0%]
-      monitor_50    - [0.0%]
-      monitor_75    - [2.2%]
-      projector_fhd - [2.2%]
-      projector_xga - [2.2%]
-      screen_100    - [4.4%]
-      screen_150    - [0.0%]
+      room_A        - [12.9%]
+      room_B        - [6.2%]
+      webcam_720p   - [9.2%]
+      webcam_1080p  - [2.5%]
+      monitor_50    - [7.5%]
+      monitor_75    - [4.2%]
+      projector_fhd - [6.7%]
+      projector_xga - [4.2%]
+      screen_100    - [5.0%]
+      screen_150    - [2.5%]
 
      -End-     
 
