@@ -1,0 +1,254 @@
+***Room Booking - ACCEPTED***
+
+Child 10078: [room_A] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+1    2016-04-01   16:00   17:00   undefined     tenant_A   room_A
+6    2016-04-01   14:00   15:00   undefined     tenant_B   room_A
+                                                           projector_xga
+                                                           screen_100
+7    2016-04-01   12:00   13:00   undefined     tenant_C   room_A
+                                                           webcam_720p
+                                                           monitor_75
+################################################################################
+#                There is/are [ 3] booking(s) for this facility.               #
+################################################################################
+
+
+
+Child 10080: [room_B] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+8    2016-04-02   19:00   21:00   undefined     tenant_A   room_B
+################################################################################
+#                There is/are [ 1] booking(s) for this facility.               #
+################################################################################
+
+
+
+Child 10081: [webcam_720p] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+4    2016-04-01   16:00   17:00   undefined     tenant_A   webcam_720p
+7    2016-04-01   12:00   13:00   undefined     tenant_C   room_A
+                                                           webcam_720p
+                                                           monitor_75
+14   2016-04-03   32:00   32:00   undefined     tenant_A   webcam_720p
+################################################################################
+#                There is/are [ 3] booking(s) for this facility.               #
+################################################################################
+
+
+
+Child 10082: [webcam_1080p] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+################################################################################
+#                  There is no any booking for this facility.                  #
+################################################################################
+
+
+
+Child 10083: [monitor_50] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+12   2016-04-03   32:00   32:00   undefined     tenant_A   monitor_50
+################################################################################
+#                There is/are [ 1] booking(s) for this facility.               #
+################################################################################
+
+
+
+Child 10084: [monitor_75] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+5    2016-04-01   16:00   17:00   undefined     tenant_A   monitor_75
+7    2016-04-01   12:00   13:00   undefined     tenant_C   room_A
+                                                           webcam_720p
+                                                           monitor_75
+################################################################################
+#                There is/are [ 2] booking(s) for this facility.               #
+################################################################################
+
+
+
+Child 10085: [projector_fhd] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+10   2016-04-02   19:00   21:00   undefined     tenant_A   projector_fhd
+################################################################################
+#                There is/are [ 1] booking(s) for this facility.               #
+################################################################################
+
+
+
+Child 10086: [projector_xga] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+2    2016-04-01   16:00   17:00   undefined     tenant_A   projector_xga
+6    2016-04-01   14:00   15:00   undefined     tenant_B   room_A
+                                                           projector_xga
+                                                           screen_100
+################################################################################
+#                There is/are [ 2] booking(s) for this facility.               #
+################################################################################
+
+
+
+Child 10087: [screen_100] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+3    2016-04-01   16:00   17:00   undefined     tenant_A   screen_100
+6    2016-04-01   14:00   15:00   undefined     tenant_B   room_A
+                                                           projector_xga
+                                                           screen_100
+11   2016-04-02   19:00   21:00   undefined     tenant_A   screen_100
+################################################################################
+#                There is/are [ 3] booking(s) for this facility.               #
+################################################################################
+
+
+
+Child 10088: [screen_150] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+################################################################################
+#                  There is no any booking for this facility.                  #
+################################################################################
+
+
+
+     -End-     
+
+***Room Booking - REJECTED***
+
+Child 10089: [room_A] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+################################################################################
+#              There is no any booking rejected for this facility.             #
+################################################################################
+
+
+
+Child 10090: [room_B] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+9    YYYY-MM-DD   20:00   22:00   undefined     undefined  room_B
+                                                           projector_fhd
+                                                           screen_100
+13   YYYY-MM-DD   31:00   32:00   undefined     undefined  room_B
+                                                           webcam_720p
+                                                           monitor_50
+################################################################################
+#            There is/are [ 2] booking(s) rejected for this facility.          #
+################################################################################
+
+
+
+Child 10091: [webcam_720p] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+13   YYYY-MM-DD   31:00   32:00   undefined     undefined  room_B
+                                                           webcam_720p
+                                                           monitor_50
+################################################################################
+#            There is/are [ 1] booking(s) rejected for this facility.          #
+################################################################################
+
+
+
+Child 10092: [webcam_1080p] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+################################################################################
+#              There is no any booking rejected for this facility.             #
+################################################################################
+
+
+
+Child 10093: [monitor_50] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+13   YYYY-MM-DD   31:00   32:00   undefined     undefined  room_B
+                                                           webcam_720p
+                                                           monitor_50
+################################################################################
+#            There is/are [ 1] booking(s) rejected for this facility.          #
+################################################################################
+
+
+
+Child 10094: [monitor_75] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+################################################################################
+#              There is no any booking rejected for this facility.             #
+################################################################################
+
+
+
+Child 10095: [projector_fhd] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+9    YYYY-MM-DD   20:00   22:00   undefined     undefined  room_B
+                                                           projector_fhd
+                                                           screen_100
+################################################################################
+#            There is/are [ 1] booking(s) rejected for this facility.          #
+################################################################################
+
+
+
+Child 10096: [projector_xga] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+################################################################################
+#              There is no any booking rejected for this facility.             #
+################################################################################
+
+
+
+Child 10097: [screen_100] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+9    YYYY-MM-DD   20:00   22:00   undefined     undefined  room_B
+                                                           projector_fhd
+                                                           screen_100
+################################################################################
+#            There is/are [ 1] booking(s) rejected for this facility.          #
+################################################################################
+
+
+
+Child 10098: [screen_150] has the following bookings:
+
+ID   Date         Start   End     Type          Requester  Facility
+================================================================================
+################################################################################
+#              There is no any booking rejected for this facility.             #
+################################################################################
+
+
+
+     -End-     
+
