@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define N 20    // The maximun acceptable number of request.
+#define N 70    // The maximun acceptable number of request.
 #define M 90    // The maximun duration of all requests is two weeks time: 2*5(per week)*9(9am-6pm)=90.
 
 /*
@@ -418,7 +418,7 @@ int *getstdat(char fil[]){
 					char **split();
 					size_t len = 0;
 					ssize_t read;
-					int stda[3];
+					int *stda=malloc(3*sizeof(int));
 strcpy(str,fil);
 printf("copied\n");
 finame = split(str," ");
@@ -527,6 +527,7 @@ printf("stday = %d\n",stday);
 	diff = day - stday;
 	return diff;
 }
+
 
 
 /**
@@ -864,8 +865,8 @@ int main(){
 	int *stdat, *request;	// stdat an array saving the starting time of the whole booking period(2 weeks)
 	int* inp();			// initialize the function input and split
 	char **split();    
-	char all[N][80], **str;	//an array for saving all command for convenience for output
-	char stry[80];;
+	char all[N][80], **str,*dup;	//an array for saving all command for convenience for output
+	char stry[80];
 	printf("~~ WELCOME TO PolySME ~~\n");
 	
 	request=malloc(sizeof(int));
@@ -874,7 +875,17 @@ int main(){
 		printf("Please enter booking:\n");
 		char input[80];
 		fgets(input,80,stdin);
-printf("%c\n",input[3]);		
+if(reqno>1){ /*check duplicate*/
+printf("check duplicat input. commandno=%d\n",commandno);
+for(i=0;i<commandno;i++){
+	dup = strstr(input,all[i]);
+	if(dup!=NULL){
+	printf("There is an duplicated input!Please re-enter booking:\n");
+	fgets(input,80,stdin);
+	i=0;
+	}
+	}
+}
 size_t len = strlen(input);
 		if (len > 0 && input[len-1] == '\n')
 			input[--len] = '\0';
@@ -882,7 +893,7 @@ size_t len = strlen(input);
 		
 		// set the start date for the system
 		if (reqno == 1 && input[3]!='B'){	//if this is the first command, take this book's date as the start time of the whole booking period
-stdat = malloc(4*sizeof(int));
+stdat = malloc(3*sizeof(int));
 str = split(stry," ");
 			str = split(str[2],"-");
 			for(i=0;i<3;i++)
@@ -894,8 +905,6 @@ printf("start getstdat functino\n");
 		}
 printf("the start date has been set %d %d %d\n",stdat[0],stdat[1],stdat[2]);		
 		request = inp(reqno, input, stdat);
-printf("%d %d %d %d %d\n",reqNum[reqno-1],st[reqno-1],ed[reqno-1],fNum[reqno-1][0],fNum[reqno-1][1]);
-printf("\n");
 
 		if (request[0]>0){
 			strcpy(all[commandno++],input);
@@ -922,6 +931,7 @@ printf("\n");
 			int num_requests = reqno;
 			
 			int **reqStatus=greedy(reqNum,num_requests,st,ed,fNum);
+			printf("greedy finished\n");
 			int total_accepted = 0;
 			int total_rejected = 0;
 			for (i=0;i<11;i++)
@@ -948,8 +958,21 @@ printf("\n");
 		else if (request[0] == -2){	// read input from a batch file
 			int numreq = request[1];
 			int place = 2;
+			FILE *ff;
+			char buf[80],**inputspl,**flename;
+			char *lin = NULL, *word;
+			size_t leng = 0;
+			ssize_t readd;
+			strcpy(buf,input);
+			inputspl = split(buf," ");
+			flename = split(inputspl[1],"-");
+			ff = fopen(flename[0],"r");
 			strcpy(all[commandno++],input);
 			for (i=0;i<numreq;i++){
+				getline(&lin,&leng,ff);
+printf("line :%s is saving into the array all in place (commandno):%d\n",lin,commandno);
+				strcpy(all[commandno++],lin);
+
 				reqNum[reqno] = request[place++];
 				st[reqno] = request[place++];
 				ed[reqno] = request[place++];
@@ -960,13 +983,16 @@ printf("\n");
 					fNum[reqno][3] = request[place++];
 				}
 				reqno++;
-				commandno++;
 			}
+request[0] = reqno;
 			
 			
 		}
 printf("%d %d %d %d %d\n",reqNum[reqno-1],st[reqno-1],ed[reqno-1],fNum[reqno-1][0],fNum[reqno-1][1]);
 printf("\n");
+//char **info;
+//info = getinfo(62,all);
+//printf("the getinfo result is:%s %s %s\n",info[0],info[1],info[2]);
 	}
 	/*
 	// ###################################################
